@@ -1,5 +1,5 @@
 rm(list = ls())
-session_info()
+
 library(tidyverse)
 library(ggcorrplot)
 library(patchwork)
@@ -7,15 +7,62 @@ library(patchwork)
 
 setwd("~/Documents/git/Dreger_2022/raw_data/")
 
-a1 <- read.csv("pheno1.csv")
 b1 <- read.csv("cols_rows1.csv")
+head(b1)
 
+a1 <- read.csv("pheno1.csv")
+a2 <- read.csv("all_19.csv")
+a3 <- read.csv("all_18.csv")
 
+colnames(a1) # 18 and 19 cut 1
+colnames(a2) # 19
+colnames(a3) # 18
+
+a1$Cutting <- 1
+colnames(a1)[7] <- "Year"
+
+Variety_a2 <- a2[,c(2,3)]
+Variety_a3 <- a3[,c(2,3)]
+common_ID <- intersect(Variety_a2$ID, Variety_a3$ID)
+
+a2$Year <- 2019
+a3$Year <- 2018
+
+a1 <- a1[,-c(2:6,19:21)]
+a1 <- a1[,c(1,14,2,3:11,13,12)]
 colnames(a1)
-lev1 <- colnames(a1)[1:6]
-a1[,lev1] <- lapply(a1[,lev1], factor)
-str(a1)
-head(a1)
+
+a2 <- a2[,-c(1,3,12:15,20:22)]
+a2 <- a2[,c(1,2,14,3:13)]
+colnames(a2)
+
+a3 <- a3[,-c(3,12:15)]
+a3 <- a3[,c(2,3,1,4:14)]
+colnames(a3)
+a4 <- rbind(a1, a2, a3)
+
+a4 <- a4 %>% dplyr::filter(ID %in% common_ID) 
+# %>% gather(key = "trait", value = "raw", 4:14)
+a5 <- inner_join(b1, a4, by = "ID") 
+head(a5)
+a5 <- a5 %>% unite("env", c(loc, Year, Cutting), sep = "_", remove = F) 
+lev1 <- colnames(a5)[1:10]
+a5[,lev1] <- lapply(a5[,lev1], factor)
+str(a5)
+summary(a5$gen)
+cc <- count(a5, gen, env)
+
+# a6 <- a5 %>% dplyr::filter(env %in% c("WA_2019_2", "WA_2019_3")) %>% dplyr::filter(gen %in% c("201"))
+# cc <- count(a6, gen, env)
+# cc <- count(a6, ID)
+# cc <- cc %>% dplyr::filter(n %in% 1)
+# cc$ID
+
+a6 <- split(a5[,-1], a5$env)
+
+save.image("~/Documents/git/big_files/tidy_Dreger1.RData")
+
+
 
 
 a2 <- a1 %>% select(c(1,6,7)) %>% spread(key = year, value = DM)
