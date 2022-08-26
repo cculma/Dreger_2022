@@ -47,8 +47,6 @@ A2018_1 <- left_join(a1, A2018_1, by = c("ID", "Treatment"))
 A2018_1$Cutting <- 1
 A2018_1 <- A2018_1 %>% gather(key = "trait", value = "raw", 9:75)
 
-
-
 A2018_2 <- qual1[[2]]
 A2018_2 <- A2018_2[,-c(3:6)]
 colnames(A2018_2)
