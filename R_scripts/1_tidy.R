@@ -59,11 +59,11 @@ cc <- count(a5, gen, env)
 # cc$ID
 
 a6 <- split(a5[,-1], a5$env)
-
+names(a6)
 save.image("~/Documents/git/big_files/tidy_Dreger1.RData")
 
-
-
+str(a6[[1]])
+levels(a6[[1]]$gen)
 
 a2 <- a1 %>% select(c(1,6,7)) %>% spread(key = year, value = DM)
 head(a2) 
@@ -81,6 +81,12 @@ a5 <- a1 %>% dplyr::filter(gen %in% c(201, 202)) %>% select(c(2,4:6,8)) %>% unit
 
 a6 <- rbind(a4, a5)
 a6 <- a6 %>% spread(key = env, value = CP) %>% remove_rownames() %>% column_to_rownames("gen")
+
+
+common_ID
+
+
+
 
 lev2 <- colnames(a1)[7:22]
 seq(7:22)
