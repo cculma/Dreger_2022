@@ -50,3 +50,24 @@ FD6.5 <- inner_join(FD6.2, FD6.1, by = "SOV")
 write.csv(FD6.5, "~/Documents/git/Dreger_2022/stats_1/AOV.csv", quote = F, row.names = F)
 
 #~~~~~~~~~~ END
+
+
+mod1 <- coef(lm(predicted.value ~ FD + cut + loc + loc:cut, data = FD7))
+anova(mod1)
+plot(mod1)
+
+head(FD4[[18]])
+FD7 <- FD4[[18]] %>% dplyr::filter(year == "2019")
+str(FD7)
+FD7$loc <- as.factor(FD7$loc)
+coefs <- coef(lm(predicted.value ~ cut, data = dat))
+
+ggplot(FD7, aes(x = FD, y = predicted.value, fill = loc)) +
+  geom_boxplot(alpha = 0.6, width=0.6, position = position_dodge(width=0.8, preserve = "single")) + facet_wrap(cut ~ loc) 
+  
+ggplot(FD7, aes(x=cut, y=predicted.value, group= loc)) +
+  geom_line()+
+  geom_point() + facet_wrap(gen ~ .) 
+
+#  geom_abline(intercept = mod1[1], slope = mod1[2])
+
