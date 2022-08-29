@@ -1,7 +1,7 @@
 # Dreger_2022
 
 This repository contains data of alfalfa quality Norberg population.
-Dreger's thesis: analysis of correlation between FD and quality traits collected Norberg population. Alfalfa population consist of seven genotypes with six different FD clases:
+Dreger's thesis: analysis of correlation between FD and quality traits collected Norberg population. Alfalfa population consists of seven genotypes with six different FD classes:
 
 |    gen    | 44 | 61 | 104 | 112 | 144 | 201 | 202 |
 |:---------:|:--:|:--:|:---:|:---:|:---:|:---:|:---:|
@@ -10,7 +10,7 @@ Dreger's thesis: analysis of correlation between FD and quality traits collected
 | ID_2018_1 |  1 |  1 |  1  |  1  |  1  |  1  |  1  |
 | ID_2018_3 |  1 |  1 |  0  |  0  |  0  |  1  |  1  |
 
-Because the augmented design experiment, we were expecting 11 measurements in 201 and 201 by env (loc:yeat:cut). There are missing genotypes (in addition to 104 and 112):
+Because of the augmented design experiment, we were expecting 11 measurements in 201 and 201 by env (loc:yeat:cut). There are missing genotypes (in addition to 104 and 112):
 
 |    env    | gen | count |
 |:---------:|:---:|:-----:|
@@ -20,9 +20,7 @@ Because the augmented design experiment, we were expecting 11 measurements in 20
 | OR_2018_2 | 201 |   12  |
 | OR_2018_3 | 201 |   10  |
 
-OR_2018_2 with 12 measurements of 201 and OR_2018_3 with 11 measurements of 201 were fixed trasnfering one value from OR_2018_2 to OR_2018_3.
-
-Multienvironment trial dataset is composed by three locations, two years, and 3, 4, or 5 cuts (samplings):
+OR_2018_2 with 12 measurements of 201 and OR_2018_3 with 11 measurements of 201 were fixed trasnferring one value from OR_2018_2 to OR_2018_3. Multi-environment trial dataset is composed by three locations (loc), two years, and 3, 4, or 5 cuts (samplings or harvests):
 
 | factor | count |
 |:------:|:-----:|
@@ -31,16 +29,14 @@ Multienvironment trial dataset is composed by three locations, two years, and 3,
 |   loc  |   3   |
 |   env  |   22  |
 
-Cuts haverst) depended of the year and location. During 2018 the field was established and only three cuts were done.
-
-Table S10. Harvest interval by year and location. Three-cut system was applied in 2018 in all locations. Four-cut system was applied in ID 2019 and in OR 2019. Five-cut system was applied in WA in 2019.
+Cuts (harvest) depended on the year and location. In 2018 the field was established and only three cuts were done. Harvest interval by year and location. Three-cut system was used in 2018 in all locations. Four-cut system was used in ID 2019 and in OR 2019. Five-cut system was used in WA in 2019.
 
 | Year  |    ID   |    OR   |     WA    |
 |:-----:|:-------:|:-------:|:---------:|
 |  2018 | 1,2,3,− | 1,2,3,− | 1,2,3,−,− |
 |  2019 | 1,2,3,4 | 1,2,3,4 | 1,2,3,4,5 |
 
-17 quality traits were collected. There are env where some traits were not collected:
+17 quality traits were collected (analyzed). There are environments where some traits were not collected:
 
 | num |   Trait  | 2018_1 | 2018_2 | 2018_3 | 2019_1 | 2019_2 | 2019_3 | 2019_4 | 2019_5 |
 |:---:|:--------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|
@@ -64,9 +60,9 @@ Table S10. Harvest interval by year and location. Three-cut system was applied i
 
 ## Flowchart and data analysis process:
 
-- Generate BLUP values ST0.
+- Generate BLUP values ST0: single-trial analysis.
 
-- Generate BLUP values ST1.
+- Generate BLUP values ST1: MET analysis.
 
 - Basic statistical metrics.
 
