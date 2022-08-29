@@ -37,6 +37,7 @@ FD2[,colnames(FD2)] <- lapply(FD2[,colnames(FD2)], factor)
 
 # join with ST1.1: BLUP values of quality traits
 FD3 <- ST1.1 %>% inner_join(., FD2, by = "gen") %>% separate(3, c("loc", "year", "cut"), sep = "_", remove = F, convert = FALSE, extra = "merge")
+head(FD3)
 
 FD4 <- FD3 %>% dplyr::filter(env == "OR_2018_1") %>% dplyr::filter(trait == "ADF")
 str(FD4)

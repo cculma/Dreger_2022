@@ -4,6 +4,8 @@ library(tidyverse)
 library(ggcorrplot)
 library(patchwork)
 library(Matrix)
+library(asreml)
+library(asremlPlus)
 
 setwd("~/Documents/git/Dreger_2022/raw_data/")
 
