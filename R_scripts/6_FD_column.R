@@ -17,7 +17,6 @@ str(Variety_a2)
 str(Variety_a3)
 str(ID1)
 
-unique()
 
 Variety_a2 <- Variety_a2 %>% distinct(ID, .keep_all = T)
 Variety_a3 <- Variety_a3 %>% distinct(ID, .keep_all = T)

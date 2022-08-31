@@ -51,23 +51,79 @@ write.csv(FD6.5, "~/Documents/git/Dreger_2022/stats_1/AOV.csv", quote = F, row.n
 
 #~~~~~~~~~~ END
 
+# plots ggplot
 
-mod1 <- coef(lm(predicted.value ~ FD + cut + loc + loc:cut, data = FD7))
-anova(mod1)
-plot(mod1)
-
+names(FD4)
 head(FD4[[18]])
-FD7 <- FD4[[18]] %>% dplyr::filter(year == "2019")
-str(FD7)
-FD7$loc <- as.factor(FD7$loc)
-coefs <- coef(lm(predicted.value ~ cut, data = dat))
 
-ggplot(FD7, aes(x = FD, y = predicted.value, fill = loc)) +
+FD7 <- FD4[[18]] %>% dplyr::filter(year == "2019") %>% dplyr::filter(!cut == "5")
+FD7 <- as.data.frame(FD7)
+FD7 <- droplevels(FD7)
+str(FD7)
+lev4 <- c("gen","env","loc","year","cut","FD","Var1")
+FD7[,lev4] <- lapply(FD7[,lev4], factor)
+
+# coefs <- coef(lm(predicted.value ~ cut, data = dat))
+
+ggplot(FD7, aes(x = gen, y = predicted.value, fill = loc)) +
   geom_boxplot(alpha = 0.6, width=0.6, position = position_dodge(width=0.8, preserve = "single")) + facet_wrap(cut ~ loc) 
-  
-ggplot(FD7, aes(x=cut, y=predicted.value, group= loc)) +
-  geom_line()+
-  geom_point() + facet_wrap(gen ~ .) 
+
+ggplot(FD7, aes(x = cut, y = predicted.value, fill = loc)) +
+  geom_boxplot(alpha = 0.6, width=0.6, position = position_dodge(width=0.8, preserve = "single")) + theme_classic(base_size = 12)
+ 
+ggplot(FD7, aes(x=cut, y=predicted.value, color = loc)) +  geom_point() + theme_classic(base_size = 12)
+  # geom_line() + facet_wrap(gen ~ .)  
 
 #  geom_abline(intercept = mod1[1], slope = mod1[2])
+head(FD7)
+
+#############
+
+# Stats by gen loc
+FD6 <- list()
+for (i in 1:length(FD4)) {
+  stat1 <- FD4[[i]] %>% dplyr::filter(year == "2019") %>% dplyr::filter(!cut == "5") %>% select(1,3,5,6) %>% unite("env", c(gen, loc), sep = "_", remove = T) %>% spread(key = env, value = predicted.value)
+  stat2 <- desc_stat(.data = stat1, stats = "main", hist = F)
+  FD6[[length(FD6)+1]] <- stat2
+}
+names(FD6) <- names(FD4)
+FD6 <- rbindlist(FD6, use.names=TRUE, fill=TRUE, idcol="trait")
+FD6.1 <- FD6 %>% separate(2, c("gen", "loc"), sep = "_", remove = T, convert = FALSE, extra = "merge") %>% inner_join(., FD2, by = "gen")
+FD6.1 <- FD6.1[order(FD6.1$trait, FD6.1$FD), ]
+colnames(FD6.1)
+FD6.1 <- FD6.1[,c(1,13,2,12,3:11)]
+write.csv(FD6.1, "~/Documents/git/Dreger_2022/stats_1/Stats2.csv", quote = F, row.names = F)
+
+# Stats by env ID_1
+FD7 <- list()
+for (i in 1:length(FD4)) {
+  stat1 <- FD4[[i]] %>% dplyr::filter(year == "2019") %>% select(1,3,5,6) %>% unite("env", c(loc, cut), sep = "_", remove = T) %>% spread(key = env, value = predicted.value)
+  stat2 <- desc_stat(.data = stat1, stats = "main", hist = F)
+  FD7[[length(FD7)+1]] <- stat2
+}
+names(FD7) <- names(FD4)
+FD7 <- rbindlist(FD7, use.names=TRUE, fill=TRUE, idcol="trait")
+write.csv(FD7, "~/Documents/git/Dreger_2022/stats_1/Stats3.csv", quote = F, row.names = F)
+
+# Stats by env ID_2018_1
+FD8 <- list()
+for (i in 1:length(FD4)) {
+  stat1 <- FD4[[i]] %>% select(1,2,6) %>% spread(key = env, value = predicted.value)
+  stat2 <- desc_stat(.data = stat1, stats = "main", hist = F)
+  FD8[[length(FD8)+1]] <- stat2
+}
+names(FD8) <- names(FD4)
+FD8 <- rbindlist(FD8, use.names=TRUE, fill=TRUE, idcol="trait")
+write.csv(FD8, "~/Documents/git/Dreger_2022/stats_1/Stats4.csv", quote = F, row.names = F)
+
+# Stats by gen
+FD5 <- list()
+for (i in 1:length(FD4)) {
+  stat1 <- FD4[[i]] %>% select(1,2,6) %>% spread(key = gen, value = predicted.value)
+  stat2 <- desc_stat(.data = stat1, stats = "main", hist = F)
+  FD5[[length(FD5)+1]] <- stat2
+}
+names(FD5) <- names(FD4)
+FD5 <- rbindlist(FD5, use.names=TRUE, fill=TRUE, idcol="trait")
+write.csv(FD5, "~/Documents/git/Dreger_2022/stats_1/Stats0.csv", quote = F, row.names = F)
 

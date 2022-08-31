@@ -8,6 +8,7 @@ library(asreml)
 library(asremlPlus)
 
 setwd("~/Documents/git/Dreger_2022/raw_data/")
+# load("/home/hawkins/Documents/git/big_files/tidy_Dreger1.RData")
 
 b1 <- read.csv("cols_rows1.csv")
 head(b1)
