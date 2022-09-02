@@ -64,6 +64,7 @@ summary(a5$gen)
 # levels(a6[[1]]$gen)
 
 # save.image("~/Documents/git/big_files/tidy_Dreger1.RData")
+# load("~/Documents/git/big_files/tidy_Dreger1.RData")
 
 c201 <- a5 %>% dplyr::filter(gen %in% c(201))
 c202 <- a5 %>% dplyr::filter(gen %in% c(202))

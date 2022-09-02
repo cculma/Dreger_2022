@@ -1,5 +1,7 @@
 library(metan)
 library(data.table)
+library(lme4)
+library(lmerTest)
 
 # BASIC stats
 
@@ -16,6 +18,58 @@ FD5 <-rbindlist(FD5, use.names=TRUE, fill=TRUE, idcol="trait")
 FD5 <- FD5[,-2]
 
 write.csv(FD5, "~/Documents/git/Dreger_2022/stats_1/desc_stats.csv", quote = F, row.names = F)
+
+###############
+# lme model
+head(FD4[[1]])
+str(FD4[[1]])
+data1 <- FD4[[1]]
+data1 <- as.data.frame(data1)
+lev4 <- colnames(data1)[c(1:5,7:8)]
+data1[,lev4] <- lapply(data1[,lev4], factor)
+str(data1)
+data1 <- droplevels(data1)
+mod1 <- lmer(predicted.value ~ FD * gen * loc + (1|cut) + (1|year) + (1|year:cut) + (1|loc:year) + (1|FD:cut) + (1|FD:loc:cut), data = data1)
+
+
+
+mod1 <- lmer(predicted.value ~ gen * loc *year + (1|cut) + (1|loc:year:cut), data = data1) ##
+
+mod2 <- lmer(predicted.value ~ gen * loc + (1|year) + (1|cut) + (1|loc:year:cut), data = data1)
+
+mod3 <- lmer(predicted.value ~ gen * loc *year + (1|cut) + (1|cut:loc) + (1|loc:year:cut), data = data1) 
+
+anova(mod1)
+anova(mod2)
+anova(mod3)
+summary(mod1)
+anova(mod1, mod2,mod3)
+
+final <- anova(mod2)[,c(1,3,6)]
+rnames <- rownames(final)
+
+
+# ANOVA lmer
+FD6 <- list()
+for (i in 1:length(FD4)) {
+  mod1 <- lmer(predicted.value ~ gen * loc *year + (1|cut) + (1|loc:year:cut), data = FD4[[i]])
+  final <- anova(mod1)[,c(1,3,6)]
+  rnames <- rownames(final)
+  colnames(final) <- c("MS", "DF", "P-value")
+  # colnames(final)[2] <- names(FD4[i])
+  final <- as.data.frame(round(final, digits = 2))
+  final$sign[final$`P-value` < 0.1] <- "."
+  final$sign[final$`P-value` < 0.05] <- "*"
+  final$sign[final$`P-value` < 0.01] <- "**"
+  final$sign[final$`P-value` < 0.001] <- "***"
+  final$sign[final$`P-value` > 0.1] <- "ns"
+  final[[1]] <- paste(final[[1]], ifelse(is.na(final[[4]]), "", final[[4]]))
+  final <- final[-c(3,4)]
+  final <- final %>% rownames_to_column(var = "SOV")
+  FD6[[length(FD6)+1]] <- final
+}
+names(FD6) <- names(FD4)
+
 
 ###############
 
@@ -40,13 +94,10 @@ for (i in 1:length(FD4)) {
 }
 names(FD6) <- names(FD4)
 FD6.1 <- rbindlist(FD6, use.names=TRUE, fill=TRUE, idcol="trait")
-FD6.1 <- FD6.1 %>% select(-3) %>% spread(key = trait, value = MS)
+FD6.3 <- FD6.1 %>% select(-4) %>% spread(key = trait, value = MS)
 
-FD6.2 <- FD6[[1]][1:2]
-FD6.3 <- FD6[[10]][1:2]
-FD6.4 <- FD6[[16]][1:2]
-
-FD6.5 <- inner_join(FD6.2, FD6.1, by = "SOV")
+FD6.2 <- FD6[[1]][c(1,3)]
+FD6.5 <- inner_join(FD6.2, FD6.3, by = "SOV")
 write.csv(FD6.5, "~/Documents/git/Dreger_2022/stats_1/AOV.csv", quote = F, row.names = F)
 
 #~~~~~~~~~~ END
