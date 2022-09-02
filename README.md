@@ -79,7 +79,7 @@ We are defining different factors as fixed or random:
 |   gen  |    7   |     7    |  Fixed |
 |   FD   |    6   |     6    |  Fixed |
 |   cut  |  3,4,5 |     5    | Random |
-|  year  |    2   |     2    | Random |
+|  year  |    2   |     2    |  Fixed |
 |   loc  |    3   |     3    |  Fixed |
 |   env  |   22   |    22    |    -   |
 
