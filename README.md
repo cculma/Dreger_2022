@@ -82,3 +82,5 @@ We are defining different factors as fixed or random:
 |  year  |    2   |     2    | Random |
 |   loc  |    3   |     3    |  Fixed |
 |   env  |   22   |    22    |    -   |
+
+`(1 | cut/year)` or `(1|cut) + (1|year:cut)`
