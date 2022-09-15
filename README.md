@@ -98,10 +98,10 @@ where $gen*loc*year$ were considered fixed effects. cut and the interaction of c
 
 ## Fransen model 2
 
-Accoriding to Fransen (09-15-22) the model requieres some changes:
+According to Fransen (09-15-22) the model requires some changes:
 
 - Fall Dormancy must be included as a source of analysis and not just mixed with genotype.
 - Year should be used as a random effect rather than fixed.
 
-New model:
+New model (mod2):
 `mod2 <- lmer(predicted.value ~ FD * gen * loc + (1|year) + (1|cut)  + (1|year:cut) + (1|loc:year) + (1|FD:cut) + (1|gen:cut) + (1|loc:year:cut) + (1|FD:loc:cut) + (1|gen:loc:cut), data = data1)`

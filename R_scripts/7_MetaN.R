@@ -34,7 +34,13 @@ mod1 <- lmer(predicted.value ~ gen * loc *year + (1|cut) + (1|loc:year:cut), dat
 
 mod2 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + (1|year) + (1|cut)  + (1|year:cut) + (1|loc:year) + (1|FD:cut) + (1|gen:cut) + (1|FD:loc:year:cut), data = data1)
 
-mod3 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc+ (1|year) + (1|cut), data = data1)
+mod3 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc 
+             + (1|year) + (1|cut)  + (1|year:cut) 
+             + (1|FD:year) + (1|gen:year) + (1|loc:year) 
+             + (1|FD:cut) + (1|gen:cut) + (1|loc:cut) 
+             + (1|FD:loc:year) + (1|gen:loc:year), data = data1)
+
+mod4 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + (1|year) + (1|cut)  + (1|loc/year/cut) + (1|FD:loc:year) + (1|gen:loc:year), data = data1)
 
 anova(mod1)
 anova(mod2)
@@ -52,7 +58,11 @@ FD6 <- list()
 for (i in 1:length(FD4)) {
   # mod1 <- lmer(predicted.value ~ gen * loc *year + (1|cut) + (1|loc:year:cut), data = FD4[[i]])
 
-  mod1 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + (1|year) + (1|cut)  + (1|year:cut) + (1|loc:year) + (1|FD:cut) + (1|gen:cut) + (1|FD:loc:year:cut), data = FD4[[i]])
+  mod1 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc 
+               + (1|year) + (1|cut)  + (1|year:cut) 
+               + (1|FD:year) + (1|gen:year) + (1|loc:year) 
+               + (1|FD:cut) + (1|gen:cut) + (1|loc:cut) 
+               + (1|FD:loc:year) + (1|gen:loc:year), data = FD4[[i]])
   
   final <- anova(mod1)[,c(1,3,6)]
   rnames <- rownames(final)
@@ -100,6 +110,7 @@ FD6.3 <- FD6.1 %>% select(-4) %>% spread(key = trait, value = MS)
 
 FD6.2 <- FD6[[1]][c(1,3)]
 FD6.5 <- inner_join(FD6.2, FD6.3, by = "SOV")
+
 write.csv(FD6.5, "~/Documents/git/Dreger_2022/stats_1/AOV.1.csv", quote = F, row.names = F)
 
 #~~~~~~~~~~ END
