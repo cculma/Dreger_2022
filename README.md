@@ -105,3 +105,12 @@ According to Fransen (09-15-22) the model requires some changes:
 
 New model (mod2):
 `mod2 <- lmer(predicted.value ~ FD * gen * loc + (1|year) + (1|cut)  + (1|year:cut) + (1|loc:year) + (1|FD:cut) + (1|gen:cut) + (1|loc:year:cut) + (1|FD:loc:cut) + (1|gen:loc:cut), data = data1)`
+
+| factor | levels | t_levels | factor |
+|:------:|:------:|:--------:|:------:|
+|   gen  |    7   |     7    |  Fixed |
+|   FD   |    6   |     6    |  Fixed |
+|   cut  |  3,4,5 |     5    | Random |
+|  year  |    2   |     2    | Random |
+|   loc  |    3   |     3    |  Fixed |
+|   env  |   22   |    22    |    -   |
