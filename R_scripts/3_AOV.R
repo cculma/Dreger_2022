@@ -4,7 +4,6 @@ library(lme4) # GLMM
 
 library(lmerTest) # ANOVA Table (replace it)
 
-
 # GLMM 
 # Random and fixed
 # BASIC stats
@@ -54,24 +53,31 @@ mod3 <- lmer(predicted.value ~ FD + loc + FD:loc +
 # separate the means summary of the model.
 
 
-mod4 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + (1|year) + (1|cut)  + (1|loc/year/cut) + (1|FD:loc:year) + (1|gen:loc:year), data = data1)
+# mod4 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + (1|year) + (1|cut)  + (1|loc/year/cut) + (1|FD:loc:year) + (1|gen:loc:year), data = data1)
 
-mod5 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + year + (1|cut), data = data1)
+# mod5 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + year + (1|cut), data = data1)
 
-mod6 <- lm(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + year + cut, data = data1)
+mod6 <- lm(predicted.value ~ FD + loc + year + cut 
+           + FD:loc + FD:year + FD:cut
+           + FD:loc:year + FD:loc:cut + FD:year:cut
+           + FD:loc:year:cut, data = data1)
 
 anova(mod1)
 anova(mod2)
 anova(mod3)
-
-anova(mod5)
 anova(mod6)
 
 mod3
 summary(mod3)
 summary(mod6)
 
-anova(mod1,mod2,mod3)
+anova(mod1,mod2,mod3,mod6)
+
+# check models and find residuals
+save.image("~/Documents/git/Dreger_2022/tidy_Dreger1.RData")
+
+
+##############
 
 final <- anova(mod2)[,c(1,3,6)]
 rnames <- rownames(final)
@@ -105,29 +111,9 @@ for (i in 1:length(FD4)) {
 }
 names(FD6) <- names(FD4)
 
-
-###############
-
-# ANOVA
-FD6 <- list()
-for (i in 1:length(FD4)) {
-  mod1 <- lm(predicted.value ~ FD + year + cut + loc + loc:cut, data = FD4[[i]])
-  final <- anova(mod1)[,c(1,3,5)]
-  rnames <- rownames(final)
-  
-  colnames(final) <- c("DF", "MS", "P-value")
-  # colnames(final)[2] <- names(FD4[i])
-  final <- as.data.frame(round(final, digits = 2))
-  final$sign[final$`P-value` < 0.05] <- "*"
-  final$sign[final$`P-value` < 0.01] <- "**"
-  final$sign[final$`P-value` < 0.001] <- "***"
-  final$sign[final$`P-value` > 0.05] <- "ns"
-  final[[2]] <- paste(final[[2]], ifelse(is.na(final[[4]]), "", final[[4]]))
-  final <- final[-c(3,4)]
-  final <- final %>% rownames_to_column(var = "SOV")
-  FD6[[length(FD6)+1]] <- final
-}
-names(FD6) <- names(FD4)
+###
+##############
+# write in a table
 
 FD6.1 <- rbindlist(FD6, use.names=TRUE, fill=TRUE, idcol="trait")
 FD6.3 <- FD6.1 %>% select(-4) %>% spread(key = trait, value = MS)
@@ -165,8 +151,9 @@ ggplot(FD7, aes(x=cut, y=predicted.value, color = loc)) +  geom_point() + theme_
 #  geom_abline(intercept = mod1[1], slope = mod1[2])
 head(FD7)
 
-#############
+##############
 
+# extras
 # Stats by gen loc
 FD6 <- list()
 for (i in 1:length(FD4)) {
