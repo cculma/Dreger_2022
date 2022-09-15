@@ -114,3 +114,12 @@ New model (mod2):
 |  year  |    2   |     2    | Random |
 |   loc  |    3   |     3    |  Fixed |
 |   env  |   22   |    22    |    -   |
+
+They requiered a model including all posible interactions and retrieving residuals and all DF in a similar way as GLM:
+`mod6 <- lm(predicted.value ~ FD + loc + year + cut + FD:loc + FD:year + FD:cut + FD:loc:year + FD:loc:cut + FD:year:cut + FD:loc:year:cut, data = data1)`
+`anova(mod6)`
+
+But using GLMM:
+
+`mod3 <- lmer(predicted.value ~ FD + loc + FD:loc+ (1|year) + (1|cut)  + (1|year:cut) + (1|FD:year) + (1|loc:year) + (1|FD:cut) + (1|loc:cut) + (1|FD:loc:year) + (1|FD:loc:cut) + (1|loc:year:cut) + (1|FD:loc:year:cut), data = data1)`
+`anova(mod3)`

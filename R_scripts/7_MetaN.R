@@ -1,8 +1,12 @@
 library(metan)
 library(data.table)
-library(lme4)
-library(lmerTest)
+library(lme4) # GLMM
 
+library(lmerTest) # ANOVA Table (replace it)
+
+
+# GLMM 
+# Random and fixed
 # BASIC stats
 
 FD4 <- split(FD3[,-1], FD3$trait)
@@ -30,22 +34,42 @@ data1[,lev4] <- lapply(data1[,lev4], factor)
 str(data1)
 data1 <- droplevels(data1)
 
-mod1 <- lmer(predicted.value ~ gen * loc *year + (1|cut) + (1|loc:year:cut), data = data1) ##
+mod1 <- lmer(predicted.value ~ gen * loc *year + (1|cut) + (1|loc:year:cut), data = data1) ## Incorrect
+
+mod1 <- lmer(predicted.value ~ FD * loc * (1|year) + (1|cut) + (1|loc:year:cut), data = data1) ##
 
 mod2 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + (1|year) + (1|cut)  + (1|year:cut) + (1|loc:year) + (1|FD:cut) + (1|gen:cut) + (1|FD:loc:year:cut), data = data1)
 
-mod3 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc 
+
+mod3 <- lmer(predicted.value ~ FD + loc + FD:loc +
              + (1|year) + (1|cut)  + (1|year:cut) 
-             + (1|FD:year) + (1|gen:year) + (1|loc:year) 
-             + (1|FD:cut) + (1|gen:cut) + (1|loc:cut) 
-             + (1|FD:loc:year) + (1|gen:loc:year), data = data1)
+             + (1|FD:year) + (1|loc:year)
+             + (1|FD:cut) + (1|loc:cut) 
+             + (1|FD:loc:year) + (1|FD:loc:cut) + (1|loc:year:cut)
+             + (1|FD:loc:year:cut), data = data1)
+
+
+# get all residuals.
+# using GLMM using.
+# separate the means summary of the model.
+
 
 mod4 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + (1|year) + (1|cut)  + (1|loc/year/cut) + (1|FD:loc:year) + (1|gen:loc:year), data = data1)
+
+mod5 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + year + (1|cut), data = data1)
+
+mod6 <- lm(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + year + cut, data = data1)
 
 anova(mod1)
 anova(mod2)
 anova(mod3)
-summary(mod1)
+
+anova(mod5)
+anova(mod6)
+
+mod3
+summary(mod3)
+summary(mod6)
 
 anova(mod1,mod2,mod3)
 
