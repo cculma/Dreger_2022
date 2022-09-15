@@ -85,13 +85,23 @@ We are defining different factors as fixed or random:
 
 The model used to obtain p-values in ANOVA.
 
-This is the Mixed Effects Model used to calculate the ANOVA table: 
+This is the Mixed Effects Model used to calculate the ANOVA table:
 
-``mod1 <- lmer(predicted.value ~ gen * loc *year + (1|cut) + (1|loc:year:cut), data = data)``
+``mod1 <- lmer(predicted.value ~ gen *loc* year + (1|cut) + (1|loc:year:cut), data = data)``
 
-where gen * loc *year were considered fixed effects. cut and the interaction of cut, year, and loc were considered random effects. 
+where $gen*loc*year$ were considered fixed effects. cut and the interaction of cut, year, and loc were considered random effects.
 
 - I tested multiple models and chose the best model based on the lowest AIC. Most time over-parametrized the model will affect its accuracy of the model. This is our case when we include more combinations (Year, Loc, Cut, FD, Gen)
 - FD and gen are redundant and will affect the model. Therefore it is better just to use Gen.
 - I compared Year as a random or fixed effect and the best model was setting Year as a fixed effect.
 - The p-values and the SS using a mixed model only retrieve values for the fixed effects.
+
+## Fransen model 2
+
+Accoriding to Fransen (09-15-22) the model requieres some changes:
+
+- Fall Dormancy must be included as a source of analysis and not just mixed with genotype.
+- Year should be used as a random effect rather than fixed.
+
+New model:
+`mod2 <- lmer(predicted.value ~ FD * gen * loc + (1|year) + (1|cut)  + (1|year:cut) + (1|loc:year) + (1|FD:cut) + (1|gen:cut) + (1|loc:year:cut) + (1|FD:loc:cut) + (1|gen:loc:cut), data = data1)`

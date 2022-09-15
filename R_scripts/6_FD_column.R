@@ -41,8 +41,8 @@ head(FD3)
 FD4 <- FD3 %>% dplyr::filter(env == "OR_2018_1") %>% dplyr::filter(trait == "ADF")
 str(FD4)
 FD4$FD <- as.numeric(FD4$FD)
-model <- lm(FD ~ predicted.value, data = FD4)
-plot(model)
+# model <- lm(FD ~ predicted.value, data = FD4)
+# plot(model)
 
 #create scatterplot of raw data
 plot(FD4$FD, FD4$predicted.value, col='red', main='Summary of Regression Model', xlab='x', ylab='y')
