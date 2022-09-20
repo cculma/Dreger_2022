@@ -123,3 +123,16 @@ But using GLMM:
 
 `mod3 <- lmer(predicted.value ~ FD + loc + FD:loc+ (1|year) + (1|cut)  + (1|year:cut) + (1|FD:year) + (1|loc:year) + (1|FD:cut) + (1|loc:cut) + (1|FD:loc:year) + (1|FD:loc:cut) + (1|loc:year:cut) + (1|FD:loc:year:cut), data = data1)`
 `anova(mod3)`
+
+## Solved: ranova: ANOVA-Like Table for Random-Effects
+
+`ranova` compute an ANOVA-like table with tests of random-effect terms in the model.
+
+`Df` degrees of freedom for the likelihood ratio test: the difference in number of model parameters.
+`Pr(>Chisq)` is the p-value.
+
+We can obtain the p-values of random and fixed terms.
+
+In statistical analysis, the F-distribution assessment is used to analysis variance in a sample group.
+
+The **denominator degrees of freedom** is the bottom portion of the F distribution ratio or degrees of freedom error: number of samples tested - number of samples groups.

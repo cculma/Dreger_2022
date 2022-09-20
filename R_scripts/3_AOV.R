@@ -37,7 +37,7 @@ mod1 <- lmer(predicted.value ~ gen * loc *year + (1|cut) + (1|loc:year:cut), dat
 
 mod1 <- lmer(predicted.value ~ FD * loc * (1|year) + (1|cut) + (1|loc:year:cut), data = data1) ##
 
-mod2 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + (1|year) + (1|cut)  + (1|year:cut) + (1|loc:year) + (1|FD:cut) + (1|gen:cut) + (1|FD:loc:year:cut), data = data1)
+mod2 <- lmer(predicted.value ~ FD * loc + (1|year) + (1|cut) + (1|loc:year:cut), REML=FALSE, data = data1)
 
 
 mod3 <- lmer(predicted.value ~ FD + loc + FD:loc +
@@ -64,8 +64,18 @@ mod6 <- lm(predicted.value ~ FD + loc + year + cut
 
 anova(mod1)
 anova(mod2)
-anova(mod3)
 anova(mod6)
+anova(mod3, ddf="Satterthwaite")
+anova(mod3, ddf="Kenward-Roger")
+anova(mod3, ddf="lme4")
+      
+anova(mod3)
+lmerTest::ranova(mod2)
+ranova(mod3, reduce.terms = T)
+
+final <- ranova(mod1)[,c(1,3,6)]
+anova(mod1)[,c(1,3,6)]
+ranova(mod1)[,c(1,3,6)]
 
 mod3
 summary(mod3)
