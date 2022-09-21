@@ -33,7 +33,7 @@ data1[,lev4] <- lapply(data1[,lev4], factor)
 str(data1)
 data1 <- droplevels(data1)
 
-mod1 <- lmer(predicted.value ~ gen * loc *year + (1|cut) + (1|loc:year:cut), data = data1) ## Incorrect
+mod1 <- lmer(predicted.value ~ gen * loc * year + (1|cut) + (1|loc:year:cut), data = data1) ## Incorrect
 
 mod1 <- lmer(predicted.value ~ FD * loc * (1|year) + (1|cut) + (1|loc:year:cut), data = data1) ##
 
@@ -70,12 +70,15 @@ anova(mod3, ddf="Kenward-Roger")
 anova(mod3, ddf="lme4")
       
 anova(mod3)
-lmerTest::ranova(mod2)
+lmerTest::ranova(mod3, reduce.terms = T)
 ranova(mod3, reduce.terms = T)
 
 final <- ranova(mod1)[,c(1,3,6)]
 anova(mod1)[,c(1,3,6)]
 ranova(mod1)[,c(1,3,6)]
+rand(mod1)
+final <- ranova(mod3)[,c(1,3,6)]
+
 
 mod3
 summary(mod3)

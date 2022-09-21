@@ -136,3 +136,28 @@ We can obtain the p-values of random and fixed terms.
 In statistical analysis, the F-distribution assessment is used to analysis variance in a sample group.
 
 The **denominator degrees of freedom** is the bottom portion of the F distribution ratio or degrees of freedom error: number of samples tested - number of samples groups.
+
+Type III Analysis of Variance Table with Satterthwaite's method:
+
+|        | Sum Sq  | Mean Sq | Num DF | Den DF  | F value | Pr(>F) |
+|--------|---------|---------|--------|---------|---------|--------|
+| FD     | 2.52053 | 0.50411 | 5      | 10.6645 | 1.8537  | 0.1851 |
+| loc    | 0.17697 | 0.08848 | 2      | 2.7647  | 0.3254  | 0.7466 |
+| FD:loc | 2.05429 | 0.20543 | 10     | 11.6861 | 0.7554  | 0.667  |
+
+ANOVA-like table for random-effects: Single term deletions:
+
+|                      | npar | logLik  | AIC    | LRT     | Df | Pr(>Chisq) |     |
+|----------------------|------|---------|--------|---------|----|------------|-----|
+| \<none>\             | 30   | -185.66 | 431.31 |         |    |            |     |
+| (1\|year)            | 29   | -185.66 | 429.31 | 0       | 1  | 0.999449   |     |
+| (1\|cut)             | 29   | -185.71 | 429.41 | 0.104   | 1  | 0.747134   |     |
+| (1\|year:cut)        | 29   | -188.33 | 434.66 | 5.35    | 1  | 0.020718   | *   |
+| (1\|FD:year)         | 29   | -185.96 | 429.91 | 0.6     | 1  | 0.438668   |     |
+| (1\|loc:year)        | 29   | -188.7  | 435.41 | 6.097   | 1  | 0.013544   | *   |
+| (1\|FD:cut)          | 29   | -189.44 | 436.89 | 7.58    | 1  | 0.005903   | **  |
+| (1\|loc:cut)         | 29   | -185.66 | 429.31 | 0       | 1  | 1          |     |
+| (1\|FD:loc:year)     | 29   | -186    | 430.01 | 0.698   | 1  | 0.403551   |     |
+| (1\|FD:loc:cut)      | 29   | -185.66 | 429.31 | 0       | 1  | 1          |     |
+| (1\|loc:year:cut)    | 29   | -246.4  | 550.8  | 121.493 | 1  | < 2.2e-16  | *** |
+| (1\|FD:loc:year:cut) | 29   | -185.66 | 429.31 | 0       | 1  | 1          |     |
