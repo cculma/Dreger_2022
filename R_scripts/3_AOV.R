@@ -1,8 +1,9 @@
 library(metan)
 library(data.table)
 library(lme4) # GLMM
-
+library(car)
 library(lmerTest) # ANOVA Table (replace it)
+library(RLRsim)
 
 # GLMM 
 # Random and fixed
@@ -40,14 +41,14 @@ mod1 <- lmer(predicted.value ~ FD * loc * (1|year) + (1|cut) + (1|loc:year:cut),
 mod2 <- lmer(predicted.value ~ FD * loc + (1|year) + (1|cut) + (1|loc:year:cut), REML=FALSE, data = data1)
 
 
-mod3 <- lmer(predicted.value ~ FD + loc + FD:loc +
-             + (1|year) + (1|cut)  + (1|year:cut) 
+mod3 <- lmer(predicted.value ~ FD + loc + FD:loc
+             + (1|year) + (1|cut) + (1|year:cut) 
              + (1|FD:year) + (1|loc:year)
              + (1|FD:cut) + (1|loc:cut) 
              + (1|FD:loc:year) + (1|FD:loc:cut) + (1|loc:year:cut)
              + (1|FD:loc:year:cut), data = data1)
 
-
+mod4 <- update(mod3, REML=FALSE, verbose = 1)
 # get all residuals.
 # using GLMM using.
 # separate the means summary of the model.
@@ -55,23 +56,77 @@ mod3 <- lmer(predicted.value ~ FD + loc + FD:loc +
 
 # mod4 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + (1|year) + (1|cut)  + (1|loc/year/cut) + (1|FD:loc:year) + (1|gen:loc:year), data = data1)
 
-# mod5 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + year + (1|cut), data = data1)
+mod5 <- glmer(predicted.value ~ FD * loc
+             + (1|year) + (1|cut) + (1|year:cut) 
+             + (1|FD:year) + (1|loc:year)
+             + (1|FD:cut) + (1|loc:cut) 
+             + (1|FD:loc:year) + (1|FD:loc:cut) + (1|loc:year:cut)
+             + (1|FD:loc:year:cut), data = data1, family = binomial, nAGQ = 0)
+?glmer
+
 
 mod6 <- lm(predicted.value ~ FD + loc + year + cut 
            + FD:loc + FD:year + FD:cut
            + FD:loc:year + FD:loc:cut + FD:year:cut
            + FD:loc:year:cut, data = data1)
 
+
+drop1(mod3)
+add1(mod5, test = "F")
 anova(mod1)
-anova(mod2)
+anova(mod3, mod5)
 anova(mod6)
+anova(mod5)
 anova(mod3, ddf="Satterthwaite")
 anova(mod3, ddf="Kenward-Roger")
 anova(mod3, ddf="lme4")
-      
+
+ls_means(mod3)
+ls_means(mod3, pairwise = T)
+ls_means(mod3, which = NULL, ddf="Kenward-Roger")
+
+ls1 <- difflsmeans(mod3, which = NULL, ddf="Satterthwaite")
+
+write.csv(ls1, "~/Documents/git/Dreger_2022/stats_1/ls1.csv", quote = F, row.names = T)
+
+(step_res <- step(mod3))
+final <- get_model(step_res)
+anova(final)
+summary(mod3, ddf="lme4")
+coef(summary(mod3))
+summary(mod3)
+lsmeansLT(mod3, which = NULL, ddf="Satterthwaite")
+
+lsm <- ls_means(mod3)
+plot(lsm, which=c("FD", "loc"))
+
+show_tests(ls_means(mod3)) 
+
+car::Anova(mod3)
+anova(mod3, ddf = "lme4")
+
+?car::Anova
+?lsmeansLT
+?ls_means
+?lme4::pvalues
+?difflsmeans
+?anova
+?lmerTest::anova
+?anova.lmerModLmerTest
+?emmeans
+?drop1
+
+library(emmeans)
+emmeans(mod3, list(pairwise ~ FD), adjust = "tukey")
+FD_a <- emmeans(mod3, "FD")
+emmeans(mod3, pairwise ~ FD + loc)
+contrast(FD_a)
+
 anova(mod3)
 lmerTest::ranova(mod3, reduce.terms = T)
-ranova(mod3, reduce.terms = T)
+ranova(mod4, reduce.terms = T)
+ranova(mod5, reduce.terms = T)
+coef(mod5)
 
 final <- ranova(mod1)[,c(1,3,6)]
 anova(mod1)[,c(1,3,6)]
@@ -79,6 +134,7 @@ ranova(mod1)[,c(1,3,6)]
 rand(mod1)
 final <- ranova(mod3)[,c(1,3,6)]
 
+plot(typing.lsm[[2]])
 
 mod3
 summary(mod3)
