@@ -87,7 +87,7 @@ ls_means(mod3, which = NULL, ddf="Kenward-Roger")
 
 ls1 <- difflsmeans(mod3, which = NULL, ddf="Satterthwaite")
 
-write.csv(ls1, "~/Documents/git/Dreger_2022/stats_1/ls1.csv", quote = F, row.names = T)
+write.csv(ls1, "~/Documents/git/Dreger_2022/statistical_results/ls1.csv", quote = F, row.names = T)
 
 (step_res <- step(mod3))
 final <- get_model(step_res)

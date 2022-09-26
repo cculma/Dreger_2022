@@ -52,6 +52,31 @@ Pseudoreplication leads to us exaggerating the size of the sample and thus the d
 
 Pseudoreplication typically occurs either in an observational study with a hierarchical structure or a designed experiment with different spatial and/or temporal scales.
 
+## Repeated Measures
+
+This experiment evaluate the phenotypic response over a given period of time where repeated measures are performed on the same experimental unit over the lenght of the study.
+
+To obtain conclusions, the complete set of observations should be used and the assumption of independence of the data is not longer valid. We are measuring the same genotype (plot) several times.
+
+The correlation between measurements of the same individual needs to be incorporated into the LMM.
+
+## Mixed Model (Single period)
+
+$$y_{ijk} = \mu + g_j + \beta x_{jk} + \alpha_k + \alpha g_{jk} + \varepsilon_{ijk}$$ (2)
+
+where,
+$i$ period
+$j$ gender (M,F)
+$k$ traetment
+$jk$ subject
+
+$y_{ijk}$ is the response of the $ijk^{th}$ observation.
+$\mu$ is the overall mean.
+$g_j$ if the fixed effect for the gender (M,F).
+$x_{jk}$ is the covariate fo baseline measurement for $jk^{th}$ subject.
+$\beta$ is the slope associated with the covariate.
+$\alpha_k$ fixed effect of the $k^{th}$ treatment with $j^{th}$ gender.
+
 ## AOV
 
 The AOV table summarizes information about the sources of variation in the data.
@@ -62,6 +87,15 @@ The ratio MS of the model / MS for error is an F statistic.
 The F statistic test if the null Ho (none of the explanatory variables has any effect).
 If Ho is true the computed F statistic (F Stat) is 18.8606.
 
-You can use the p-value (Pr > F) to determine whether to reject the Ho.
-The p-value (probability or observed significance level) is the pr of obtaining, by chance alone, an F statistic greater than the computed F statistic when the Ho is T.
+You can use the p-value (Pr > F) to determine whether to reject the Ho. The p-value (probability or observed significance level) is the pr of obtaining, by chance alone, an F statistic greater than the computed F statistic when the Ho is T.
 Smaller p-value is stronger the evidence againts the Ho. Small p-value you can reject the Ho and conclude that at least one of the explanatory variables has an effect on Y (response variable).
+
+ANOVA and LMM analysis are largely equivalent. But when the data are unbalanced or when we want to relax certain assumptions of the ANOVA, the LMM analysis is preferable.
+
+**GLM**: General Linear Model or Fixed effects Model.
+**LMM**: Linear Mixed Model.
+
+| SAS        | R    | Model                       |
+|------------|------|-----------------------------|
+| Proc MIXED | lmer | Mixed-model analysis        |
+| Proc GLM   | lm   | Treats all effects as fixed |
