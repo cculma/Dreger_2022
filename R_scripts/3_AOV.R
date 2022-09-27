@@ -56,14 +56,12 @@ mod4 <- update(mod3, REML=FALSE, verbose = 1)
 
 # mod4 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + (1|year) + (1|cut)  + (1|loc/year/cut) + (1|FD:loc:year) + (1|gen:loc:year), data = data1)
 
-mod5 <- glmer(predicted.value ~ FD * loc
+mod5 <- lmer(predicted.value ~ FD * loc
              + (1|year) + (1|cut) + (1|year:cut) 
              + (1|FD:year) + (1|loc:year)
              + (1|FD:cut) + (1|loc:cut) 
              + (1|FD:loc:year) + (1|FD:loc:cut) + (1|loc:year:cut)
-             + (1|FD:loc:year:cut), data = data1, family = binomial, nAGQ = 0)
-?glmer
-
+             + (1|FD:loc:year:cut), data = data1)
 
 mod6 <- lm(predicted.value ~ FD + loc + year + cut 
            + FD:loc + FD:year + FD:cut
@@ -81,7 +79,7 @@ anova(mod3, ddf="Satterthwaite")
 anova(mod3, ddf="Kenward-Roger")
 anova(mod3, ddf="lme4")
 
-ls_means(mod3)
+ls_means(mod5)
 ls_means(mod3, pairwise = T)
 ls_means(mod3, which = NULL, ddf="Kenward-Roger")
 

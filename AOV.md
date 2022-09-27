@@ -99,3 +99,7 @@ ANOVA and LMM analysis are largely equivalent. But when the data are unbalanced 
 |------------|------|-----------------------------|
 | Proc MIXED | lmer | Mixed-model analysis        |
 | Proc GLM   | lm   | Treats all effects as fixed |
+
+## lmer vs glmer functions
+
+`lmer` is used to fit linear mixed-effect models, so it assumes that the residual error has a Gaussian distribution. If your dependent variable A is a binary outcome (e.g. a yes/no response), then the error distribution is binomial and not Gaussian. In this case you have to use `glmer`, which allow to fit a generalized linear mixed-effects model: these models include a link function that allows to predict response variables with non-Gaussian distributions. One example of link function that could work in your case is the logistic function, which takes an input with any value from negative to positive infinity and return an output that always takes values between zero and one, which is interpretable as the probability of the binary outcome (e.g. the probability of the subject responding 'yes').
