@@ -25,11 +25,29 @@ Non linear model: sometimes the response is not linear, so you need to use non l
 
 There are linear models with multiple $x$. A multiple linear regression model shows relationship between the dependent variable and multiple (two or more) independent variables.
 
-$$
-y = \beta_{0} + \beta_{1}x_{1} + \beta_{2}x_{2} + \beta_{p}x_{p} + \varepsilon
-$$
+$$y = \beta_{0} + \beta_{1}x_{1} + \beta_{2}x_{2} + \beta_{p}x_{p} + \varepsilon$$
 
 where $y$ is the response (dependent) variable, $\beta_0$ to $\beta_0p$ are the coefficients, $x_1$ to $x_p$ are the predictor (independent or explanatory) variable and $\varepsilon$ is the error term in the model, noise or random error. The response can be ploted as an hyperplane.
+
+The linear in linear model refers to the fact that we use linear conbination of covariaties or predictor $(x)$ and parameters $(\beta)$. The $\beta$ are unknown parameters and a very common approach to estimating the betas is to find the values that minimize the residual sum of squares.
+
+### Example 1
+
+Example with father's height at $x$ vs son's height at $y$. We are triyng to determine the relationship between father and son's heights.
+
+$$y_i = \beta_0 + \beta_1 x_i + \varepsilon_i$$
+$$i = 1, ..., n$$
+
+Here the term $\varepsilon$ is used to describe the variation arround the line. It is confusing call it error because it describe the fact that there is natural variability around the prediction, and this could be due to mother's height, env factors or other unknown variables that affect son's height.
+
+### Example 2
+
+There are two diets for mice: chow (control) and high fat (hf) and the lm is: 
+
+$$y_i = \beta_0 + \beta_1 x_i + \varepsilon_i$$
+$$i = 1, ..., n$$
+
+where $\beta_0$ is chow diet average weight, $\beta_1$ is hf diet average weight, $\varepsilon_i$ explaines differences between mice of same population and $x_i$ can be 0 if chow diet or 1 if hf diet.
 
 ## General Linear Model
 
@@ -62,7 +80,7 @@ The correlation between measurements of the same individual needs to be incorpor
 
 ## Mixed Model (Single period)
 
-$$y_{ijk} = \mu + g_j + \beta x_{jk} + \alpha_k + \alpha g_{jk} + \varepsilon_{ijk}$$ (2)
+$$ y_{ijk} = \mu + g_j + \beta x_{jk} + \alpha_k + \alpha g_{jk} + \varepsilon_{ijk}$$
 
 where,
 $i$ period
