@@ -1,6 +1,16 @@
 # Dreger_2022
 
 This repository contains data of alfalfa quality Norberg population.
+
+Here we are testing multiple traits (analytes e.g., lignin) to determine if:
+
+- FD have an effect on those analytes.
+- Assess if there was a quantitative relationship between lignin and FD classes.
+- If there was interaction of FD and cutting time?
+- If there were differences in lignin among genotypes of the same FD class.
+
+Each analyte was determined for each plot with 3, 4 and 5 cuts per year.
+
 Dreger's thesis: analysis of correlation between FD and quality traits collected Norberg population. Alfalfa population consists of seven genotypes with six different FD classes:
 
 |    gen    | 44 | 61 | 104 | 112 | 144 | 201 | 202 |
@@ -161,3 +171,12 @@ ANOVA-like table for random-effects: Single term deletions:
 | (1\|FD:loc:cut)      | 29   | -185.66 | 429.31 | 0       | 1  | 1          |     |
 | (1\|loc:year:cut)    | 29   | -246.4  | 550.8  | 121.493 | 1  | < 2.2e-16  | *** |
 | (1\|FD:loc:year:cut) | 29   | -185.66 | 429.31 | 0       | 1  | 1          |     |
+
+
+FD and genotype are nested factors, two separated ANOVA can be performed: One for FD class, and other for genotype.
+
+Time of cutting (Cut) was taking as split factor.
+
+When F test was significant (p < 0.05) Duncan's multipe range test.
+
+Lignin comparisons among differnt FD classes: 

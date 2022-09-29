@@ -56,6 +56,7 @@ a5[,lev1] <- lapply(a5[,lev1], factor)
 str(a5)
 levels(a5$trait)
 summary(a5$gen)
+a5$check <- 
 
 
 # a6 <- split(a5[,-1], a5$env)
@@ -68,14 +69,16 @@ summary(a5$gen)
 
 c201 <- a5 %>% dplyr::filter(gen %in% c(201))
 c202 <- a5 %>% dplyr::filter(gen %in% c(202))
-head(c201)
+# head(c201)
 
 c201 <- c201[,-c(3:7)]
 colnames(c201)[6] <- "cov1"
 c202 <- c202[,-c(3:7)]
 colnames(c202)[6] <- "cov2"
 
-a6 <- a5 %>% left_join(., c201, by= c("loc", "block", "Cutting", "Year", "trait")) %>% left_join(., c202, by= c("loc", "block", "Cutting", "Year", "trait")) %>% unite("env", c(loc, Year, Cutting, trait), sep = "_", remove = F) 
+# a6 <- a5 %>% inner_join(., c201, by= c("loc", "block", "Cutting", "Year", "trait")) 
+
+a6 <- a5 %>% inner_join(., c201, by= c("loc", "block", "Cutting", "Year", "trait")) %>% inner_join(., c202, by= c("loc", "block", "Cutting", "Year", "trait")) %>% unite("env", c(loc, Year, Cutting, trait), sep = "_", remove = F) 
 head(a6)
 
 a6 <- split(a6[,-1], a6$env)

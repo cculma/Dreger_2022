@@ -3,7 +3,8 @@ library(data.table)
 library(lme4) # GLMM
 library(car)
 library(lmerTest) # ANOVA Table (replace it)
-library(RLRsim)
+# library(RLRsim)
+# install.packages("boot")
 
 # GLMM 
 # Random and fixed
