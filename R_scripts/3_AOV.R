@@ -1,3 +1,5 @@
+rm(list = ls())
+
 library(metan)
 library(data.table)
 library(lme4) # GLMM
@@ -49,7 +51,33 @@ mod3 <- lmer(predicted.value ~ FD + loc + FD:loc
              + (1|FD:loc:year) + (1|FD:loc:cut) + (1|loc:year:cut)
              + (1|FD:loc:year:cut), data = data1)
 
+summary(mod3)
+anova(mod3)
 mod4 <- update(mod3, REML=FALSE, verbose = 1)
+vc <- lme4::VarCorr(mod3)
+# Variance-Covariance Matrix of fixed effects: 
+vc_fixed <- as.matrix(vcov(mod3))
+
+# Variance of fixed effects: 
+var_fixed <- diag(vc_fixed)
+var_fixed
+
+se_fixed <- sqrt(var_fixed)
+se_fixed
+
+
+summary(mod3)
+get_variance(mod3)
+get_variance_fixed(mod3)
+get_variance_residual(mod3)
+get_residuals(mod3)
+get_df(mod3)
+get_deviance(mod3)
+find_random(mod3)
+get_random(mod3)
+find_response(mod3)
+is_mixed_model(mod3)
+find_parameters(mod3)
 # get all residuals.
 # using GLMM using.
 # separate the means summary of the model.
@@ -57,12 +85,14 @@ mod4 <- update(mod3, REML=FALSE, verbose = 1)
 
 # mod4 <- lmer(predicted.value ~ FD + gen + loc + FD:loc + gen:loc + (1|year) + (1|cut)  + (1|loc/year/cut) + (1|FD:loc:year) + (1|gen:loc:year), data = data1)
 
-mod5 <- lmer(predicted.value ~ FD * loc
+mod5 <- lmer(predicted.value ~ FD * loc * year * cut
              + (1|year) + (1|cut) + (1|year:cut) 
              + (1|FD:year) + (1|loc:year)
              + (1|FD:cut) + (1|loc:cut) 
              + (1|FD:loc:year) + (1|FD:loc:cut) + (1|loc:year:cut)
              + (1|FD:loc:year:cut), data = data1)
+mod4 <- update(mod5, REML=FALSE, verbose = 1)
+anova(mod4)
 
 mod6 <- lm(predicted.value ~ FD + loc + year + cut 
            + FD:loc + FD:year + FD:cut
@@ -80,11 +110,12 @@ anova(mod3, ddf="Satterthwaite")
 anova(mod3, ddf="Kenward-Roger")
 anova(mod3, ddf="lme4")
 
-ls_means(mod5)
+ls_means(mod4)
 ls_means(mod3, pairwise = T)
 ls_means(mod3, which = NULL, ddf="Kenward-Roger")
 
 ls1 <- difflsmeans(mod3, which = NULL, ddf="Satterthwaite")
+ls_means(mod6)
 
 write.csv(ls1, "~/Documents/git/Dreger_2022/statistical_results/ls1.csv", quote = F, row.names = T)
 
