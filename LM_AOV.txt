@@ -1,0 +1,29 @@
+mod6 = lm(predicted.value ~ FD + loc + year + cut
+           + FD:loc + FD:year + FD:cut 
+           + loc:year + loc:cut + year:cut
+           + FD:loc:year + FD:loc:cut + FD:year:cut + loc:year:cut
+           + FD:loc:year:cut, data = data1)
+
+anova(mod6) 
+Analysis of Variance Table
+
+Response: predicted.value
+                Df Sum Sq Mean Sq  F value    Pr(>F)    
+FD               5  11.00   2.200   7.5270 0.0002991 ***
+loc              2  54.60  27.301  93.4186 1.773e-11 ***
+year             1  25.66  25.665  87.8190 3.882e-09 ***
+cut              4 588.01 147.003 503.0091 < 2.2e-16 ***
+FD:loc          10   2.76   0.276   0.9445 0.5142522    
+FD:year          5   4.70   0.940   3.2163 0.0249620 *  
+FD:cut          20  12.21   0.611   2.0891 0.0480100 *  
+loc:year         2 381.60 190.798 652.8636 < 2.2e-16 ***
+loc:cut          6  90.30  15.050  51.4981 7.695e-12 ***
+year:cut         2 363.65 181.824 622.1555 < 2.2e-16 ***
+FD:loc:year     10   3.40   0.340   1.1620 0.3653016    
+FD:loc:cut      30   7.56   0.252   0.8623 0.6522013    
+FD:year:cut     10   4.16   0.416   1.4247 0.2337828    
+loc:year:cut     4 106.53  26.634  91.1335 2.309e-13 ***
+FD:loc:year:cut 20   5.01   0.251   0.8578 0.6328293    
+Residuals       22   6.43   0.292                       
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

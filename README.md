@@ -180,3 +180,10 @@ Time of cutting (Cut) was taking as split factor.
 When F test was significant (p < 0.05) Duncan's multipe range test.
 
 Lignin comparisons among differnt FD classes: 
+
+
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Confidence level: 95%
+  Degrees of freedom method: Kenward-Roger 

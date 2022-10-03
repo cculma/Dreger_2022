@@ -5,6 +5,8 @@ library(data.table)
 library(lme4) # GLMM
 library(car)
 library(lmerTest) # ANOVA Table (replace it)
+install.packages("lsmeans")
+library(lsmeans)
 # library(RLRsim)
 # install.packages("boot")
 
@@ -28,6 +30,7 @@ write.csv(FD5, "~/Documents/git/Dreger_2022/stats_1/desc_stats.csv", quote = F, 
 
 ###############
 # lme model
+names(FD4)
 head(FD4[[1]])
 str(FD4[[1]])
 data1 <- FD4[[1]]
@@ -51,6 +54,17 @@ mod3 <- lmer(predicted.value ~ FD + loc + FD:loc
              + (1|FD:loc:year) + (1|FD:loc:cut) + (1|loc:year:cut)
              + (1|FD:loc:year:cut), data = data1)
 
+ls2 <- ls_means(mod3, pairwise = T)
+ls3 <- ls_means(mod3, pairwise = F, ddf="Satterthwaite")
+ls4 <- ls_means(mod3, pairwise = F, ddf="Kenward-Roger")
+
+
+?ls_means
+write.csv(ls3, "~/Documents/git/Dreger_2022/statistical_results/ls3.csv", quote = F, row.names = T)
+
+ls_means(mod3, which = NULL, ddf="Kenward-Roger")
+
+mod3
 summary(mod3)
 anova(mod3)
 mod4 <- update(mod3, REML=FALSE, verbose = 1)
@@ -94,9 +108,10 @@ mod5 <- lmer(predicted.value ~ FD * loc * year * cut
 mod4 <- update(mod5, REML=FALSE, verbose = 1)
 anova(mod4)
 
-mod6 <- lm(predicted.value ~ FD + loc + year + cut 
-           + FD:loc + FD:year + FD:cut
-           + FD:loc:year + FD:loc:cut + FD:year:cut
+mod6 <- lm(predicted.value ~ FD + loc + year + cut
+           + FD:loc + FD:year + FD:cut 
+           + loc:year + loc:cut + year:cut
+           + FD:loc:year + FD:loc:cut + FD:year:cut + loc:year:cut
            + FD:loc:year:cut, data = data1)
 
 
@@ -104,15 +119,20 @@ drop1(mod3)
 add1(mod5, test = "F")
 anova(mod1)
 anova(mod3, mod5)
-anova(mod6)
+anova(mod6) 
+?lsmeans
+lsmeans(mod6, "loc")
+marginal = emmeans(mod6, ~ loc)
+
 anova(mod5)
 anova(mod3, ddf="Satterthwaite")
 anova(mod3, ddf="Kenward-Roger")
 anova(mod3, ddf="lme4")
 
 ls_means(mod4)
-ls_means(mod3, pairwise = T)
-ls_means(mod3, which = NULL, ddf="Kenward-Roger")
+
+
+mean(data1$predicted.value)
 
 ls1 <- difflsmeans(mod3, which = NULL, ddf="Satterthwaite")
 ls_means(mod6)
