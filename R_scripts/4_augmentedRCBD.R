@@ -1,5 +1,6 @@
 install.packages('augmentedRCBD', dependencies=TRUE)
 library(augmentedRCBD)
+library(agricolae)
 
 a1 <- read.csv("~/Documents/git/Dreger_2022/raw_data/example_Scoot.csv")
 colnames(a1)
@@ -26,9 +27,91 @@ out1 <- augmentedRCBD(data$blk, data$trt, data$y1, method.comp = "lsd",
                       alpha = 0.05, group = TRUE, console = TRUE)
 
 
-out2 <- augmentedRCBD(a1$Block, a1$Entry, a1$Yi, method.comp = "lsd",
+out3 <- augmentedRCBD(data$block, data$gen, data$raw, method.comp = "lsd",
                       alpha = 0.05, group = TRUE, console = TRUE)
 
-out2$Means
+m2 <- out3$Means
+m2 <- m2[,c(1,8)]
+colnames(m2)[1] <- "gen"
+
+m3 <- asreml::asreml(fixed = raw ~ gen + block,
+                     data = data,
+                     na.action = list(x = "include", y = "include"))
+
+summary(m3)
+wald(m3)
+
+m5 <- predict.asreml(m3, classify='gen', vcov=TRUE)$pvals
+m5 <- m5[,c(1:2)]
+m6 <- inner_join(m2, m5, by = "gen")
+cor(m6$`Adjusted Means`, m6$predicted.value)
+
+# ASReml
+data <- FD3[[1]]
+head(data)
+data <- droplevels(data)
+data$env <- as.factor(data$env)
+str(data)
+lev2 <- colnames(data)[1:5]
+data <- as.data.frame(data)
+data[,lev2] <- lapply(data[,lev2], factor)
+data <- na.omit(data)
+head(data)
 
 
+m3 <- asreml::asreml(fixed = raw ~ gen + block,
+                     data = data,
+                     na.action = list(x = "include", y = "include"))
+
+
+
+DIAG <- asreml::asreml(fixed = raw ~ gen + block,
+                       random = ~ diag(env):id(gen) + loc + Year + Cutting,
+                       data = data, na.action = list(x = "include", y = "include"),
+                       family = asreml::asr_gaussian(dispersion = 1))
+
+
+US <- asreml::asreml(fixed = raw ~ gen + block,
+                     random = ~ idv(env):id(gen) + loc + Year + Cutting,
+                     data = data, na.action = list(x = "include", y = "include"),
+                     family = asreml::asr_gaussian(dispersion = 1))
+
+infoCriteria.asreml(DIAG)
+infoCriteria.asreml(US)
+
+BLUP1 <- predict.asreml(US, classify='gen:loc:Year', vcov=TRUE)$pvals
+current.asrt <- as.asrtests(DIAG, NULL, NULL)
+diffs <- predictPlus(classify = "loc:cut", 
+                     asreml.obj = US, 
+                     wald.tab = current.asrt$wald.tab, 
+                     present = c("gen", "loc", "year","cut"))
+
+
+
+m2 <- asreml::asreml(fixed = raw ~ 1 + gen + cov1 + cov2, 
+                     random = ~ + block + spl(row), 
+                     data = data, 
+                     na.action = list(x = "include", y = "include"))
+
+m3 <- asreml::asreml(fixed = raw ~ gen + block,
+                     data = data,
+                     na.action = list(x = "include", y = "include"))
+
+m4 <- asreml::asreml(fixed = raw ~ gen,
+                     random = ~ block ,
+                     data = data,
+                     na.action = list(x = "include", y = "include"))
+
+m5 <- asreml::asreml(fixed = raw ~ 1 + gen + cov1 + cov2, 
+                     random = ~ block, 
+                     data = data, 
+                     na.action = list(x = "include", y = "include"))
+
+infoCriteria.asreml(m2)
+infoCriteria.asreml(m3)
+infoCriteria.asreml(m4)
+
+
+
+summary(m3)
+summary(m2)

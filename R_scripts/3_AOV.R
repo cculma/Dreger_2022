@@ -2,13 +2,10 @@ rm(list = ls())
 
 library(metan)
 library(data.table)
-library(lme4) # GLMM
+library(lme4) # LMM
 library(car)
 library(lmerTest) # ANOVA Table (replace it)
-install.packages("lsmeans")
 library(lsmeans)
-# library(RLRsim)
-# install.packages("boot")
 
 # GLMM 
 # Random and fixed
@@ -33,18 +30,18 @@ write.csv(FD5, "~/Documents/git/Dreger_2022/stats_1/desc_stats.csv", quote = F, 
 names(FD4)
 head(FD4[[1]])
 str(FD4[[1]])
-data1 <- FD4[[1]]
-data1 <- as.data.frame(data1)
-lev4 <- colnames(data1)[c(1:5,7:8)]
-data1[,lev4] <- lapply(data1[,lev4], factor)
-str(data1)
-data1 <- droplevels(data1)
+data2 <- FD4[[1]]
+data2 <- as.data.frame(data2)
+lev4 <- colnames(data2)[c(1:5,7:8)]
+data2[,lev4] <- lapply(data2[,lev4], factor)
+str(data2)
+data2 <- droplevels(data2)
 
-mod1 <- lmer(predicted.value ~ gen * loc * year + (1|cut) + (1|loc:year:cut), data = data1) ## Incorrect
+mod1 <- lmer(predicted.value ~ gen * loc * year + (1|cut) + (1|loc:year:cut), data = data2) ## Incorrect
 
-mod1 <- lmer(predicted.value ~ FD * loc * (1|year) + (1|cut) + (1|loc:year:cut), data = data1) ##
+mod1 <- lmer(predicted.value ~ FD * loc * (1|year) + (1|cut) + (1|loc:year:cut), data = data2) ##
 
-mod2 <- lmer(predicted.value ~ FD * loc + (1|year) + (1|cut) + (1|loc:year:cut), REML=FALSE, data = data1)
+mod2 <- lmer(predicted.value ~ FD * loc + (1|year) + (1|cut) + (1|loc:year:cut), REML=FALSE, data = data2)
 
 
 mod3 <- lmer(predicted.value ~ FD + loc + FD:loc
@@ -52,7 +49,10 @@ mod3 <- lmer(predicted.value ~ FD + loc + FD:loc
              + (1|FD:year) + (1|loc:year)
              + (1|FD:cut) + (1|loc:cut) 
              + (1|FD:loc:year) + (1|FD:loc:cut) + (1|loc:year:cut)
-             + (1|FD:loc:year:cut), data = data1)
+             + (1|FD:loc:year:cut), data = data2)
+
+summary(mod3)
+confint(mod3) # Computing profile confidence intervals
 
 ls2 <- ls_means(mod3, pairwise = T)
 ls3 <- ls_means(mod3, pairwise = F, ddf="Satterthwaite")
