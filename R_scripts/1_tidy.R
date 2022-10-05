@@ -167,10 +167,12 @@ for (i in 1:(length(ST01))) {
 #                          weights = weight, family = asreml::asr_gaussian(dispersion = 1))
 #   FA_1 <- update.asreml(FA_1)
   
-  US <- asreml::asreml(fixed = predicted.value ~ FD * loc ,
+  US <- asreml::asreml(fixed = predicted.value ~ FD * loc,
                        random = ~ idv(env):id(gen) + cut + year,
                        data = data1, na.action = list(x = "include", y = "include"),
                        weights = weight, family = asreml::asr_gaussian(dispersion = 1))
+
+  
   
   W1 <- wald.asreml(US)
   ST3[[length(ST3)+1]] <- W1
