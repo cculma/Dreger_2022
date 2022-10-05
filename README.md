@@ -46,6 +46,13 @@ Cuts (harvest) depended on the year and location. In 2018 the field was establis
 |  2018 | 1,2,3,− | 1,2,3,− | 1,2,3,−,− |
 |  2019 | 1,2,3,4 | 1,2,3,4 | 1,2,3,4,5 |
 
+The field was established in 2018 and the cut number between years could be not accure as months:
+
+| Year | ID  | -   | -   | -   | OR  | -   | -   | -   | WA  | -   | -   | -   | -   |
+|------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| 2018 | -   | Jul | Aug | Sep | -   | Jul | Aug | Sep | -   | -   | Jul | Aug | Sep |
+| 2019 | Jun | Jul | Aug | Sep | Jun | Jul | Aug | Sep | May | Jun | Jul | Aug | Sep |
+
 17 quality traits were collected (analyzed). There are environments where some traits were not collected:
 
 | num |   Trait  | 2018_1 | 2018_2 | 2018_3 | 2019_1 | 2019_2 | 2019_3 | 2019_4 | 2019_5 |
