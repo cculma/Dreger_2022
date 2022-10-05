@@ -6,9 +6,13 @@ library(patchwork)
 library(Matrix)
 library(asreml)
 library(asremlPlus)
+library(data.table)
+library(xlsx)
+library(reshape2)
 
 setwd("~/Documents/git/Dreger_2022/raw_data/")
-# load("/home/hawkins/Documents/git/big_files/tidy_Dreger1.RData")
+load("~/Documents/git/Dreger_2022/tidy_Dreger1.RData")
+save.image("~/Documents/git/Dreger_2022/tidy_Dreger1.RData")
 
 b1 <- read.csv("cols_rows1.csv")
 head(b1)
@@ -49,15 +53,12 @@ a4 <- a4 %>% dplyr::filter(ID %in% common_ID) %>% gather(key = "trait", value = 
 a5 <- inner_join(b1, a4, by = "ID") 
 head(a5)
 
-
 # a5 <- a5 %>% unite("env", c(loc, Year, Cutting), sep = "_", remove = F) 
 lev1 <- colnames(a5)[1:10]
 a5[,lev1] <- lapply(a5[,lev1], factor)
 str(a5)
 levels(a5$trait)
 summary(a5$gen)
-
-
 
 # a6 <- split(a5[,-1], a5$env)
 # names(a6)
@@ -81,10 +82,9 @@ colnames(c202)[6] <- "cov2"
 a6 <- a5 %>% inner_join(., c201, by= c("loc", "block", "Cutting", "Year", "trait")) %>% inner_join(., c202, by= c("loc", "block", "Cutting", "Year", "trait")) %>% unite("env", c(loc, Year, Cutting, trait), sep = "_", remove = F) %>% inner_join(., FD2, by = "gen")
 head(a6)
 
-
-FD3 <- a6 %>% inner_join(., FD2, by = "gen")
-head(FD3)
-FD3 <- split(FD3[,-11], FD3$trait)
+# FD3 <- a6 %>% inner_join(., FD2, by = "gen")
+# head(FD3)
+# FD3 <- split(FD3[,-11], FD3$trait)
 
 
 a6 <- split(a6[,-1], a6$env)
@@ -103,7 +103,6 @@ for (i in 1:length(a6)) {
   #                      data = data,
   #                      na.action = list(x = "include", y = "include"))
   
-  
   m3 <- asreml::asreml(fixed = raw ~ gen + block,
                        data = data,
                        na.action = list(x = "include", y = "include"))
@@ -120,9 +119,9 @@ length(ST0)
 length(a6)
 names(ST0) <- names(a6)
 
-
 ST0 <-rbindlist(ST0, use.names=TRUE, fill=TRUE, idcol="trait")
 head(ST0)
+
 ST01 <- ST0 %>% separate(1, c("loc", "year", "cut", "trait"), sep = "_", remove = F, convert = FALSE, extra = "merge") %>% unite("env", c(loc, year, cut), sep = "_", remove = F) %>% inner_join(., FD2, by = "gen")
 head(ST01)
 
@@ -130,7 +129,18 @@ head(ST01)
 # ST01 <- split(ST01[,-2], ST01$env)
 ST01 <- split(ST01[,-6], ST01$trait)
 names(ST01)
-#######
+
+#############
+lev6 <- c("FD","loc","year","cut",
+          "FD:loc","FD:year","FD:cut","loc:year","loc:cut","year:cut",
+          "FD:loc:year","FD:loc:cut","loc:year:cut","FD:loc:year:cut")
+
+lev5 <- c("FD","loc","year","cut",
+          "FD_loc","FD_year","FD_cut","loc_year","loc_cut","year_cut",
+          "FD_loc_year","FD_loc_cut","loc_year_cut","FD_loc_year_cut")
+
+
+#############
 # ST1
 
 data <- ST01[[16]] # starch
@@ -142,6 +152,7 @@ head(data)
 # data$env <- as.factor(data$env)
 
 ST1 <- list()
+ST3 <- list()
 for (i in 1:(length(ST01))) {
   data <- ST01[[i]]
   lev2 <- colnames(data)[c(1:5,9,10)]
@@ -160,8 +171,9 @@ for (i in 1:(length(ST01))) {
                        random = ~ idv(env):id(gen) + cut + year,
                        data = data1, na.action = list(x = "include", y = "include"),
                        weights = weight, family = asreml::asr_gaussian(dispersion = 1))
-  # a1 <- wald.asreml(US)
-  # class(a1)
+  
+  W1 <- wald.asreml(US)
+  ST3[[length(ST3)+1]] <- W1
 
   current.asrt <- as.asrtests(US, NULL, NULL)
   current.asrt <- rmboundary.asrtests(current.asrt)
@@ -184,15 +196,17 @@ for (i in 1:(length(ST01))) {
 length(ST1)
 length(ST01)
 names(ST1) <- names(ST01)
+names(ST3) <- names(ST01)
 
 data <- ST1[[1]]
 data1 <- data[[1]][[1]]
 data2 <- data[[1]]
 data1 <- data[[1]][[4]]
-names(data[[1]])
 names(ST1[1])
 names(data[[1]])
 
+##################
+# p_differences
 
 setwd("~/Documents/git/Dreger_2022/statistical_results/p_differences_melt/")
 
@@ -212,7 +226,6 @@ for (i in 1:length(ST1)) {
   saveWorkbook(wb, paste0(names(ST1[i]), '.p.differences_melt.xlsx'))
   lapply(names(ST4), function(x) write.xlsx(ST4[[x]], paste0(names(ST1[i]), '.p.differences_melt.xlsx'), sheetName=x, append=T, row.names=F, showNA = F))
 }
-
 
 # ST1.1 <-rbindlist(ST1, use.names=TRUE, fill=TRUE, idcol="trait")
 # head(ST1.1)
@@ -236,9 +249,13 @@ for (i in 1:length(ST1)) {
   lapply(names(ST4), function(x) write.xlsx(ST4[[x]], paste0(names(ST1[i]), '.predictions.xlsx'), sheetName=x, append=T, row.names=F, showNA = F))
 }
 
+##########
+# wald
+setwd("~/Documents/git/Dreger_2022/statistical_results/wald/")
 
+lapply(names(ST3), function(x) write.xlsx(ST3[[x]], 'dreger.wald.xlsx', sheetName=x, append=T, row.names=T, showNA = F))
 
-#######
+##########
 # all traits
 
 # a1 <- read.csv("pheno1.csv")
@@ -268,4 +285,4 @@ head(a5)
 a5 <- a5 %>% na_if("") %>% na.omit
 
 ######
-
+summary(US)
