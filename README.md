@@ -48,16 +48,17 @@ Cuts (harvest) depended on the year and location. In 2018 the field was establis
 
 The field was established in 2018 and the cut number between years could be not accure as months:
 
-|         |     |  2018  | 2018 | 2018 | 2018 | 2018 | 2018 | 2018 | 2019 | 2019 | 2019 | 2019 | 2019 | 2019 | 2020 |
-|:-------:|:---:|:------:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
-|         |     |  Spri  | Spri | Summ | Summ | Summ | Fall | Wint | Spri | Summ | Summ | Summ | Fall | Wint | Spri |
-|         | LOC |   Apr  |  May |  Jun |  Jul |  Aug |  Sep |   -  |  May |  Jun |  Jul |  Aug |  Sep |   -  |  May |
-| Ori_CUT |  ID | Sowing |   -  |   -  |   1  |   2  |   3  |   -  |   1  |   -  |   2  |   3  |   4  |   -  |   1  |
-|         |  OR | Sowing |   -  |   -  |   1  |   2  |   3  |   -  |   1  |   -  |   2  |   3  |   4  |   -  |   1  |
-|         |  WA | Sowing |   -  |   -  |   1  |   2  |   3  |   -  |   1  |   2  |   3  |   4  |   5  |   -  |   1  |
-| New_CUT |  ID | Sowing |   -  |   -  |   3  |   4  |   5  |   -  |   1  |   -  |   3  |   4  |   5  |   -  |   1  |
-|         |  OR | Sowing |   -  |   -  |   3  |   4  |   5  |   -  |   1  |   -  |   3  |   4  |   5  |   -  |   1  |
-|         |  WA | Sowing |   -  |   -  |   3  |   4  |   5  |   -  |   1  |   2  |   3  |   4  |   5  |   -  |   1  |
+|     CUT     | LOC |  2018  | 2018 | 2018 | 2018 | 2018 | 2018 | 2018 | 2019 | 2019 | 2019 | 2019 | 2019 | 2019 | 2020 |
+|:-----------:|:---:|:------:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+|             |     |  Spri  | Spri | Summ | Summ | Summ | Fall | Wint | Spri | Summ | Summ | Summ | Fall | Wint | Spri |
+|             |     |   Apr  |  May |  Jun |  Jul |  Aug |  Sep |   -  |  May |  Jun |  Jul |  Aug |  Sep |   -  |  May |
+|   Original  |  ID | Sowing |   -  |   -  |   1  |   2  |   3  |   -  |   1  |   -  |   2  |   3  |   4  |   -  |   1  |
+|             |  OR | Sowing |   -  |   -  |   1  |   2  |   3  |   -  |   1  |   -  |   2  |   3  |   4  |   -  |   1  |
+|             |  WA | Sowing |   -  |   -  |   1  |   2  |   3  |   -  |   1  |   2  |   3  |   4  |   5  |   -  |   1  |
+|     New     |  ID | Sowing |   -  |   -  |   3  |   4  |   5  |   -  |   1  |   -  |   3  |   4  |   5  |   -  |   1  |
+|             |  OR | Sowing |   -  |   -  |   3  |   4  |   5  |   -  |   1  |   -  |   3  |   4  |   5  |   -  |   1  |
+|             |  WA | Sowing |   -  |   -  |   3  |   4  |   5  |   -  |   1  |   2  |   3  |   4  |   5  |   -  |   1  |
+| Consecutive |  -  |    -   |   -  |   -  |   1  |   2  |   3  |   -  |   4  |   -  |   5  |   6  |   7  |   -  |   8  |
 
 17 quality traits were collected (analyzed). There are environments where some traits were not collected:
 
