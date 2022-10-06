@@ -60,6 +60,21 @@ The field was established in 2018 and the cut number between years could be not 
 |             |  WA | Sowing |   -  |   -  |   3  |   4  |   5  |   -  |   1  |   2  |   3  |   4  |   5  |   -  |   1  |
 | Consecutive |  -  |    -   |   -  |   -  |   1  |   2  |   3  |   -  |   4  |   -  |   5  |   6  |   7  |   -  |   8  |
 
+
+|     CUT     | LOC |  2018  | 2018 | 2018 | 2018 | 2018 | 2018 | 2018 | 2019 | 2019 | 2019 | 2019 | 2019 | 2019 | 2020 |
+|:-----------:|:---:|:------:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+|             |     |  Spri  | Spri | Summ | Summ | Summ | Fall | Wint | Spri | Summ | Summ | Summ | Fall | Wint | Spri |
+|             |     |   Apr  |  May |  Jun |  Jul |  Aug |  Sep |   -  |  May |  Jun |  Jul |  Aug |  Sep |   -  |  May |
+|   Original  |  ID | Sowing |   -  |   -  |   1  |   2  |   3  |   -  |   1  |   2  |   3  |   4  |   -  |   -  |   1  |
+|             |  OR | Sowing |   -  |   -  |   1  |   2  |   3  |   -  |   1  |   2  |   3  |   4  |   -  |   -  |   1  |
+|             |  WA | Sowing |   -  |   -  |   1  |   2  |   3  |   -  |   1  |   2  |   3  |   4  |   5  |   -  |   1  |
+|     New     |  ID | Sowing |   -  |   -  |   3  |   4  |   5  |   -  |   1  |   2  |   3  |   4  |   -  |   -  |   1  |
+|             |  OR | Sowing |   -  |   -  |   3  |   4  |   5  |   -  |   1  |   3  |   3  |   4  |   -  |   -  |   1  |
+|             |  WA | Sowing |   -  |   -  |   3  |   4  |   5  |   -  |   1  |   2  |   3  |   4  |   5  |   -  |   1  |
+| Consecutive |  -  |    -   |   -  |   -  |   1  |   2  |   3  |   -  |   4  |   5  |   6  |   7  |   8  |   -  |   9  |
+
+
+
 17 quality traits were collected (analyzed). There are environments where some traits were not collected:
 
 | num |   Trait  | 2018_1 | 2018_2 | 2018_3 | 2019_1 | 2019_2 | 2019_3 | 2019_4 | 2019_5 |
