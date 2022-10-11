@@ -242,6 +242,9 @@ For example we can define as ENV {ID, OR, WA} or the interaction with the YEAR {
 |      | ID_2019_4 | OR_2019_4 | WA_2019_4 |
 |      | -         | -         | WA_2019_5 |
 
+
+env1 
+
 In annual crops, the methods of spatial analysis have been developed to include one and two dimensional trend models, using a separable correlation structure.
 
 In perennial crops variety selection trials, data is usually obtained from multiple harvest over a number of years. There is a need to accuont for temporal correlation in the residuals. **Each plot has repreated measurements**.
@@ -269,3 +272,9 @@ Modelling involves a sequential process to arrive at a best model in terms of th
 - Modelling non-genetic effects $(r \times c)$.
 - Modelling temporal variation (harvest $h$). $h$ happens in a temporal structure (dimension).
 - Modelling the genetic variation.
+
+## Using different groups as env
+
+| env1      | env2    | env3   | env4     | env5 | loc | year |
+|-----------|---------|--------|----------|------|-----|------|
+| ID_2018_1 | ID_2018 | 2018_1 | 2018_jul | jul  | ID  | 2018 |

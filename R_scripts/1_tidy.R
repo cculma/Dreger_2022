@@ -235,7 +235,7 @@ for (i in 1:(length(ST03))) {
   #                      weights = weight, family = asreml::asr_gaussian(dispersion = 1))
   
   M1 <- asreml::asreml(fixed = predicted.value ~ FD * loc ,
-                       random = ~ us(loc):ar1(env4):id(gen) + year * env5,
+                       random = ~ us(loc):ar1(env4):id(gen) + year,
                        data = data1, na.action = list(x = "include", y = "include"),
                        weights = weight, family = asreml::asr_gaussian(dispersion = 1))
   
@@ -254,7 +254,7 @@ for (i in 1:(length(ST03))) {
     diffs <- predictPlus(classify = lev6[j], 
                          asreml.obj = M1, 
                          wald.tab = current.asrt$wald.tab, 
-                         present = c("FD","gen","loc","env4", "env5"))
+                         present = c("FD","gen","loc","env4"))
    
     ST2[[length(ST2)+1]] <- diffs
   }
@@ -270,9 +270,7 @@ names(ST1) <- names(ST03)
 names(ST3) <- names(ST03)
 names(ST4) <- names(ST03)
 
-names(ST1)[19] <- "TTNDFD"
-names(ST3)[19] <- "TTNDFD"
-names(ST4)[19] <- "TTNDFD"
+
 
 data <- ST1[[1]]
 data1 <- data[[1]][[1]]

@@ -4,7 +4,7 @@ library(ggpubr)
 library(ggsci)
 
 names(ST02)
-ST03 <- ST02[-c(15,16,21)]
+ST03 <- ST02[-c(15,16)]
 names(ST03)
 
 data <- ST02[[1]] # ADF
