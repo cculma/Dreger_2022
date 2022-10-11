@@ -63,8 +63,8 @@ The field was established in 2018 and the cut number between years could be not 
 
 |     CUT     | LOC |  2018  | 2018 | 2018 | 2018 | 2018 | 2018 | 2018 | 2019 | 2019 | 2019 | 2019 | 2019 | 2019 | 2020 |
 |:-----------:|:---:|:------:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
-|             |     |  Spri  | Spri | Summ | Summ | Summ | Fall | Wint | Spri | Summ | Summ | Summ | Fall | Wint | Spri |
-|             |     |   Apr  |  May |  Jun |  Jul |  Aug |  Sep |   -  |  May |  Jun |  Jul |  Aug |  Sep |   -  |  May |
+|             | Sea |  Spri  | Spri | Summ | Summ | Summ | Fall | Wint | Spri | Summ | Summ | Summ | Fall | Wint | Spri |
+|             | Mon |   Apr  |  May |  Jun |  Jul |  Aug |  Sep |   -  |  May |  Jun |  Jul |  Aug |  Sep |   -  |  May |
 |   Original  |  ID | Sowing |   -  |   -  |   1  |   2  |   3  |   -  |   1  |   2  |   3  |   4  |   -  |   -  |   1  |
 |             |  OR | Sowing |   -  |   -  |   1  |   2  |   3  |   -  |   1  |   2  |   3  |   4  |   -  |   -  |   1  |
 |             |  WA | Sowing |   -  |   -  |   1  |   2  |   3  |   -  |   1  |   2  |   3  |   4  |   5  |   -  |   1  |
@@ -216,3 +216,56 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 
 Confidence level: 95%
   Degrees of freedom method: Kenward-Roger 
+
+## Environments
+
+How to define an environment?
+
+Is and ENV = LOC and what happens in perennial crops (alfalfa or perennial ryegrass)?
+
+- Roza is a location, but it could be deffined as a single ENV?
+
+- In alfalfa we have Multi-Environment Multi-Harvest (MEMH) trials or at least Multi-Harvest trials. Here Multi-Harvest will be deffined as CUT.
+
+- To be a trial, the same population must to be swon.
+
+For example we can define as ENV {ID, OR, WA} or the interaction with the YEAR {ID_2018, ID_2019, OR_2018, OR_2019, WA_2018, WA_2019} or the interaction with the CUT and every single harvest could be deffined as an ENV:
+
+|      | ID        | OR        | WA        |
+|------|-----------|-----------|-----------|
+| 2018 | ID_2018_1 | OR_2018_1 | WA_2018_1 |
+|      | ID_2018_2 | OR_2018_2 | WA_2018_2 |
+|      | ID_2018_3 | OR_2018_3 | WA_2018_3 |
+| 2019 | ID_2019_1 | OR_2019_1 | WA_2019_1 |
+|      | ID_2019_2 | OR_2019_2 | WA_2019_2 |
+|      | ID_2019_3 | OR_2019_3 | WA_2019_3 |
+|      | ID_2019_4 | OR_2019_4 | WA_2019_4 |
+|      | -         | -         | WA_2019_5 |
+
+In annual crops, the methods of spatial analysis have been developed to include one and two dimensional trend models, using a separable correlation structure.
+
+In perennial crops variety selection trials, data is usually obtained from multiple harvest over a number of years. There is a need to accuont for temporal correlation in the residuals. **Each plot has repreated measurements**.
+
+There is a serial correlation between harvests on the same plot decreases when time increases. We are modelling repeated maesurments that accounts for variation between experimental units (plots?) and serial correlation within units.
+
+In perennial crops, it is uasually not of interest to simply obtain predictions at each harvest time. In alfalfa we are interested to investigate the varietal (genotype) response profile over the time, or at specific times of interest, and to obtain an insight into variety by harvest (GEN:CUT) interaction including spatial correlation measurement.
+
+If we want to model the genetic response over time we can apply a **random regression model** also known as random coefficients model. Random regression model is used to model lactation curves and cattle growth data.
+
+Every YEAR:CUT interaction is considered a harvest time.
+
+Yield is transformed using a cube root transfromation $(y + 1)^\frac{1}{3}$ to stabilize the variance and better approximate the assumed Normal distribution.
+
+When collecting Yi, the nature of the trait involves growth between CUT, when the CUT occurring at varying time spacings: FALL to SPRING.
+
+Another important trait is persistence. Persistence of each variety can be recorded as the percentage $P$ of unit squares in a grid $10 \times 10$ squares that had the plot at each of the harvest time. Other measurement of $P$ can be $\%P = \frac{plants\_alive}{total\_plants} \times 100$.
+
+The logit transfromation is: $log \frac{(P + 0.5)}{100 - P + 0.5}$ and allows to stabilize the variance, thereby providing a better approximation to the Normal distribution.
+
+The response trait $(y)$ over the time can be smooth (persistence) or not smooth (Yi).The ideal approach to analysing the yield data is to model the variety (GEN) deviations from the harvest means. For smooth continunus function is a smooth curve **(polynomial or cubic smoothing spline)**.
+
+Modelling involves a sequential process to arrive at a best model in terms of the fit to the data. In Multi-Harvest trials the modelling steps involve:
+
+- Modelling non-genetic effects $(r \times c)$.
+- Modelling temporal variation (harvest $h$). $h$ happens in a temporal structure (dimension).
+- Modelling the genetic variation.

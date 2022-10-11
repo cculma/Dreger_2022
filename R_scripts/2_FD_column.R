@@ -1,10 +1,12 @@
 # add FD column
 library(tidyverse)
 
+a2 <- read.csv("all_19.csv")
+head(a2)
+Variety_a2 <- a2[,c(4,5)]
 
-Variety_a2 <- a2[,c(2,3)]
 Variety_a3 <- a3[,c(2,3)]
-common_ID <- intersect(Variety_a2$ID, Variety_a3$ID)
+common_ID <- intersect(Variety_a2$ID, unique(a2$ID))
 common_ID
 ID1 <- as.data.frame(common_ID)
 colnames(ID1) <- "ID"
@@ -31,7 +33,10 @@ write.csv(FD1, "~/Documents/git/Dreger_2022/raw_data/FD_raw1.csv", quote = F, ro
 #Start here
 
 FD2 <- read.csv("~/Documents/git/Dreger_2022/raw_data/FD_raw1.csv")
+# FD2 <- FD2[,-2]
 FD2 <- inner_join(b1, FD2, by = "ID") %>% select(5,9,10) %>% distinct(gen, .keep_all = T)
+str(FD2)
+colnames(FD2)
 FD2[,colnames(FD2)] <- lapply(FD2[,colnames(FD2)], factor)
 
 # join with ST1.1: BLUP values of quality traits

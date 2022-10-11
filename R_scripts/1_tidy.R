@@ -9,56 +9,73 @@ library(asremlPlus)
 library(data.table)
 library(xlsx)
 library(reshape2)
+install.packages("sqldf")
+require(sqldf)
 
 setwd("~/Documents/git/Dreger_2022/raw_data/")
 load("~/Documents/git/Dreger_2022/tidy_Dreger1.RData")
 save.image("~/Documents/git/Dreger_2022/tidy_Dreger1.RData")
 
 b1 <- read.csv("cols_rows1.csv")
+colnames(b1)
 head(b1)
 
 a1 <- read.csv("pheno1.csv")
 a2 <- read.csv("all_19.csv")
 a3 <- read.csv("all_18.csv")
+a4 <- read.csv("all_20_21.csv")
+
 
 colnames(a1) # 18 and 19 cut 1
 colnames(a2) # 19
 colnames(a3) # 18
+colnames(a4) # 20 21
 
-a1$Cutting <- 1
-colnames(a1)[7] <- "Year"
+a1 <- a1 %>% select(., -c("Name"))
+a2 <- a2 %>% select(., -c("Variety"))
+a3 <- a3 %>% select(., -c("Variety"))
 
-Variety_a2 <- a2[,c(2,3)]
-Variety_a3 <- a3[,c(2,3)]
-common_ID <- intersect(Variety_a2$ID, Variety_a3$ID)
-common_ID
+a1 <- inner_join(b1, a1, by = c("ID","block","position","loc","gen")) 
+a2 <- inner_join(b1, a2, by = c("loc","ID")) 
+a3 <- inner_join(b1, a3, by = c("ID")) 
+a4 <- inner_join(b1, a4, by = c("block","position","loc","gen")) 
 
-a2$Year <- 2019
-a3$Year <- 2018
+# colnames(a5)
+# colnames(a1)
+# a5 <- a5[,c(8,4,2,3,5,1,9,10:24)]
+# a1NotIna2 <- sqldf('SELECT * FROM a1 EXCEPT SELECT * FROM a5')
 
-a1 <- a1[,-c(2:6,19:21)]
-a1 <- a1[,c(1,14,2,3:11,13,12)]
-colnames(a1)
+a1 <- a1 %>% gather(key = "trait", value = "raw", 10:24)
+a2 <- a2 %>% gather(key = "trait", value = "raw", 10:27)
+a3 <- a3 %>% gather(key = "trait", value = "raw", 10:24)
+a4 <- a4 %>% gather(key = "trait", value = "raw", 10:29)
+a3 <- a3 %>% relocate(year, .after=Cutting)
 
-a2 <- a2[,-c(1,3,12:15,20:22)]
-a2 <- a2[,c(1,2,14,3:13)]
-colnames(a2)
+head(a1)
+head(a2)
+head(a3)
+head(a4)
 
-a3 <- a3[,-c(3,12:15)]
-a3 <- a3[,c(2,3,1,4:14)]
-colnames(a3)
-a4 <- rbind(a1, a2, a3)
+common_ID <- unique(a2$ID)
 
-a4 <- a4 %>% dplyr::filter(ID %in% common_ID) %>% gather(key = "trait", value = "raw", 4:14)
-a5 <- inner_join(b1, a4, by = "ID") 
+a5 <- rbind(a1, a2, a3, a4)
+a5 <- a5 %>% dplyr::filter(ID %in% common_ID)
+a5 <- inner_join(FD2, a5, by = "ID")
 head(a5)
+colnames(a5)
+# data$month <- fct_relevel(data$month, "2019_jun", after = 4)
+
 
 # a5 <- a5 %>% unite("env", c(loc, Year, Cutting), sep = "_", remove = F) 
-lev1 <- colnames(a5)[1:10]
+lev1 <- colnames(a5)[1:12]
 a5[,lev1] <- lapply(a5[,lev1], factor)
 str(a5)
 levels(a5$trait)
 summary(a5$gen)
+
+a5 <- a5 %>% dplyr::filter(!gen %in% "22")
+summary(a5$Var1)
+a6 <- droplevels(a5)
 
 # a6 <- split(a5[,-1], a5$env)
 # names(a6)
@@ -78,17 +95,14 @@ c202 <- c202[,-c(3:7)]
 colnames(c202)[6] <- "cov2"
 
 # a6 <- a5 %>% inner_join(., c201, by= c("loc", "block", "Cutting", "Year", "trait")) 
-
-a6 <- a5 %>% inner_join(., c201, by= c("loc", "block", "Cutting", "Year", "trait")) %>% inner_join(., c202, by= c("loc", "block", "Cutting", "Year", "trait")) %>% unite("env", c(loc, Year, Cutting, trait), sep = "_", remove = F) %>% inner_join(., FD2, by = "gen")
+# a6 <- a5 %>% inner_join(., c201, by= c("loc", "block", "Cutting", "Year", "trait")) %>% inner_join(., c202, by= c("loc", "block", "Cutting", "Year", "trait")) %>% unite("env", c(loc, Year, Cutting, trait), sep = "_", remove = F) %>% inner_join(., FD2, by = "gen")
 head(a6)
 
-# FD3 <- a6 %>% inner_join(., FD2, by = "gen")
-# head(FD3)
-# FD3 <- split(FD3[,-11], FD3$trait)
-
-
-a6 <- split(a6[,-1], a6$env)
+a6 <- a6 %>% unite("env", c(loc, year, Cutting, trait), sep = "_", remove = F)
+a6 <- split(a6[,-4], a6$env)
 names(a6)
+length(a6)
+
 
 # ST0
 data <- a6[[2]]
@@ -121,24 +135,81 @@ names(ST0) <- names(a6)
 
 ST0 <-rbindlist(ST0, use.names=TRUE, fill=TRUE, idcol="trait")
 head(ST0)
+str(ST0)
+ST01 <- ST0 %>% separate(1, c("loc", "year", "cut", "trait"), sep = "_", remove = F, convert = FALSE, extra = "merge") %>% unite("env1", c(loc, year, cut), sep = "_", remove = F)  %>% unite("env2", c(loc, year), sep = "_", remove = F) %>% unite("env3", c(year, cut), sep = "_", remove = F)%>% inner_join(., FD2, by = "gen")
 
-ST01 <- ST0 %>% separate(1, c("loc", "year", "cut", "trait"), sep = "_", remove = F, convert = FALSE, extra = "merge") %>% unite("env", c(loc, year, cut), sep = "_", remove = F) %>% inner_join(., FD2, by = "gen")
+ST01 <- ST01 %>% relocate(gen, .after=env3) %>% relocate(loc, .after=gen) %>% relocate(c("FD","Var1"), .after=gen)
 head(ST01)
+ST01 <- as.data.frame(ST01)
+lev2 <- colnames(ST01)[1:10]
+ST01[,lev2] <- lapply(ST01[,lev2], factor)
+
+ST01$env4 <- recode_factor(ST01$env1,
+                           "ID_2018_1"="2018_jul","ID_2018_2"="2018_aug","ID_2018_3"="2018_sep",
+                           "ID_2019_1"="2019_may","ID_2019_2"="2019_jun",
+                           "ID_2019_3"="2019_jul","ID_2019_4"="2019_aug","ID_2020_1"="2020_may",
+                           "OR_2018_1"="2018_jul","OR_2018_2"="2018_aug","OR_2018_3"="2018_sep",
+                           "OR_2019_1"="2019_may","OR_2019_2"="2019_jun",
+                           "OR_2019_3"="2019_jul","OR_2019_4"="2019_aug",
+                           "OR_2020_1"="2020_may","OR_2021_1"="2021_may",
+                           "WA_2018_1"="2018_jul","WA_2018_2"="2018_aug","WA_2018_3"="2018_sep",
+                           "WA_2019_1"="2019_may","WA_2019_2"="2019_jun",
+                           "WA_2019_3"="2019_jul","WA_2019_4"="2019_aug","WA_2019_5"="2019_sep",
+                           "WA_2020_1"="2020_may","WA_2021_1"="2021_may")
+ST01$env5 <- recode_factor(ST01$env1,
+                           "ID_2018_1"="jul","ID_2018_2"="aug","ID_2018_3"="sep",
+                           "ID_2019_1"="may","ID_2019_2"="jun",
+                           "ID_2019_3"="jul","ID_2019_4"="aug","ID_2020_1"="may",
+                           "OR_2018_1"="jul","OR_2018_2"="aug","OR_2018_3"="sep",
+                           "OR_2019_1"="may","OR_2019_2"="jun",
+                           "OR_2019_3"="jul","OR_2019_4"="aug",
+                           "OR_2020_1"="may","OR_2021_1"="may",
+                           "WA_2018_1"="jul","WA_2018_2"="aug","WA_2018_3"="sep",
+                           "WA_2019_1"="may","WA_2019_2"="jun",
+                           "WA_2019_3"="jul","WA_2019_4"="aug","WA_2019_5"="sep",
+                           "WA_2020_1"="may","WA_2021_1"="may")
 
 
-# ST01 <- split(ST01[,-2], ST01$env)
-ST01 <- split(ST01[,-6], ST01$trait)
-names(ST01)
+ST01$env4  <- fct_relevel(ST01$env4, "2019_sep", after = 7)
+ST01$env5 <- fct_relevel(ST01$env5, c("may", "jun", "jul", "aug", "sep"))
+
+levels(ST01$env1)
+levels(ST01$env2)
+levels(ST01$env3)
+levels(ST01$env4)
+levels(ST01$env5)
+levels(ST01$cut)
+levels(ST01$FD)
+
+ST01 <- ST01 %>% relocate(env4, .after=env3)  %>% relocate(env5, .after=env4) 
+
+str(ST01)
+summary(ST01$env1)
+
+ST02 <- split(ST01[,-11], ST01$trait)
+names(ST02)
+
+# data <- droplevels(ST01[[18]]) # Starch
+# data <- droplevels(ST01[[21]]) # TTNDFD
+str(data)
+levels(data$env3)
 
 #############
-lev6 <- c("FD","loc","year","cut",
-          "FD:loc","FD:year","FD:cut","loc:year","loc:cut","year:cut",
-          "FD:loc:year","FD:loc:cut","loc:year:cut","FD:loc:year:cut")
+lev6 <- c("FD","loc","year","env5",
+          "FD:loc","FD:year","FD:env5","loc:year","loc:env5","year:env5",
+          "FD:loc:year","FD:loc:env5","loc:year:env5","FD:loc:year:env5")
 
-lev5 <- c("FD","loc","year","cut",
-          "FD_loc","FD_year","FD_cut","loc_year","loc_cut","year_cut",
-          "FD_loc_year","FD_loc_cut","loc_year_cut","FD_loc_year_cut")
+lev5 <- c("FD","loc","year","month",
+          "FD_loc","FD_year","FD_month","loc_year","loc_month","year_month",
+          "FD_loc_year","FD_loc_month","loc_year_month","FD_loc_year_month")
 
+lev6 <- c("FD","loc","year","env4",
+          "FD:loc","FD:year","FD:env4","loc:year","loc:env4",
+          "FD:loc:year","FD:loc:env4")
+
+lev5 <- c("FD","loc","year","year_month",
+          "FD_loc","FD_year","FD_year_month","loc_year","loc_year_month",
+          "FD_loc_year","FD_loc_year_month")
 
 #############
 # ST1
@@ -153,39 +224,38 @@ head(data)
 
 ST1 <- list()
 ST3 <- list()
-for (i in 1:(length(ST01))) {
-  data <- ST01[[i]]
-  lev2 <- colnames(data)[c(1:5,9,10)]
-  data <- as.data.frame(data)
-  data[,lev2] <- lapply(data[,lev2], factor)
+ST4 <- list()
+for (i in 1:(length(ST03))) {
+  data <- ST03[[i]]
   data1 <- na.omit(data)
   head(data1)
-# 
-#   FA_1 <- asreml::asreml(fixed = predicted.value ~ 1 + gen,
-#                          random = ~ fa(env, 1):id(gen) + loc + year + cut,
-#                          data = data1, na.action = list(x = "include", y = "include"),
-#                          weights = weight, family = asreml::asr_gaussian(dispersion = 1))
-#   FA_1 <- update.asreml(FA_1)
   
-  US <- asreml::asreml(fixed = predicted.value ~ FD * loc,
-                       random = ~ idv(env):id(gen) + cut + year,
+  # M1 <- asreml::asreml(fixed = predicted.value ~ FD * loc ,
+  #                      random = ~ us(loc):ar1(env3):id(gen) + year,
+  #                      data = data1, na.action = list(x = "include", y = "include"),
+  #                      weights = weight, family = asreml::asr_gaussian(dispersion = 1))
+  
+  M1 <- asreml::asreml(fixed = predicted.value ~ FD * loc ,
+                       random = ~ us(loc):ar1(env4):id(gen) + year * env5,
                        data = data1, na.action = list(x = "include", y = "include"),
                        weights = weight, family = asreml::asr_gaussian(dispersion = 1))
-
   
   
-  W1 <- wald.asreml(US)
+  W1 <- wald.asreml(M1)
   ST3[[length(ST3)+1]] <- W1
+  
+  W2 <- summary(M1)$varcomp
+  ST4[[length(ST4)+1]] <- W1
 
-  current.asrt <- as.asrtests(US, NULL, NULL)
+  current.asrt <- as.asrtests(M1, NULL, NULL)
   current.asrt <- rmboundary.asrtests(current.asrt)
   
   ST2 <- list()
   for (j in 1:length(lev6)) {
     diffs <- predictPlus(classify = lev6[j], 
-                         asreml.obj = US, 
+                         asreml.obj = M1, 
                          wald.tab = current.asrt$wald.tab, 
-                         present = c("FD","gen","loc","year","cut"))
+                         present = c("FD","gen","loc","env4", "env5"))
    
     ST2[[length(ST2)+1]] <- diffs
   }
@@ -196,9 +266,14 @@ for (i in 1:(length(ST01))) {
 }
 
 length(ST1)
-length(ST01)
-names(ST1) <- names(ST01)
-names(ST3) <- names(ST01)
+length(ST03)
+names(ST1) <- names(ST03)
+names(ST3) <- names(ST03)
+names(ST4) <- names(ST03)
+
+names(ST1)[19] <- "TTNDFD"
+names(ST3)[19] <- "TTNDFD"
+names(ST4)[19] <- "TTNDFD"
 
 data <- ST1[[1]]
 data1 <- data[[1]][[1]]
@@ -210,7 +285,7 @@ names(data[[1]])
 ##################
 # p_differences
 
-setwd("~/Documents/git/Dreger_2022/statistical_results/p_differences_melt/")
+setwd("~/Documents/git/Dreger_2022/statistical_results/p_differences_melt1/")
 
 for (i in 1:length(ST1)) {
   data <- ST1[[i]]
@@ -255,7 +330,7 @@ for (i in 1:length(ST1)) {
 # wald
 setwd("~/Documents/git/Dreger_2022/statistical_results/wald/")
 
-lapply(names(ST3), function(x) write.xlsx(ST3[[x]], 'dreger.wald.xlsx', sheetName=x, append=T, row.names=T, showNA = F))
+lapply(names(ST3), function(x) write.xlsx(ST3[[x]], 'dreger.wald.1.xlsx', sheetName=x, append=T, row.names=T, showNA = F))
 
 ##########
 # all traits
