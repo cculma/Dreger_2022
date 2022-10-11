@@ -1,5 +1,7 @@
 library(hrbrthemes)
 library(viridis)
+library(ggpubr)
+library(ggsci)
 
 names(ST02)
 ST03 <- ST02[-c(15,16,21)]
@@ -187,4 +189,29 @@ ggplot(df, aes(x=env5, y=predicted.value, group=FD, color=FD)) +
   geom_point(alpha = 0.6)+
   geom_errorbar(aes(ymin=predicted.value - standard.error,ymax=predicted.value+standard.error), width = 0.1, alpha = 0.6) + theme_minimal() + facet_grid(. ~ loc, scales = "free", space = "free") 
 
+# ST1 predictPlus data
+# ST4 varcomp
+
+# 11 ST1 FD:env4:loc or FD_loc_year_month
+names(ST1)
+names(ST1[[19]])
+names(ST1[[13]])
+ST1[[19]][[11]][[1]]
+df1 <- as.data.frame(ST1[[13]][[6]][[1]])
+df1 <- as.data.frame(ST1[[19]][[7]][[1]])
+
+# create FD_year_month in rest of elements 1:18
+
+head(df1)
+
+ggplot(df1, aes(x=env4, y=predicted.value, group=FD, color=FD)) + 
+  geom_line(alpha = 0.6) +
+  geom_point(aes(color = FD), size = 1, alpha = 0.6) +
+  geom_errorbar(aes(ymin=predicted.value - standard.error,ymax=predicted.value+standard.error), width = 0.1, alpha = 0.6) + theme_bw(base_family = "Arial", base_size = 14) + facet_grid(loc ~ ., scales = "free_x", space = "free") + theme(axis.text.x = element_text(angle = 90, hjust = 0.95, vjust = 0.2)) + labs(y = "Predicted Values", x = "")
+
+ggplot(df1, aes(x=env4, y=predicted.value, group=FD, color=FD)) + 
+  geom_line(alpha = 0.6) +
+  geom_point(aes(color = FD), size = 1, alpha = 0.6) +
+  geom_errorbar(aes(ymin = lower.Confidence.limit, ymax = upper.Confidence.limit), width = 0.1, alpha = 0.6) +
+  theme_bw(base_family = "Arial", base_size = 14) + theme(axis.text.x = element_text(angle = 90, hjust = 0.95, vjust = 0.2))
 

@@ -9,7 +9,6 @@ library(asremlPlus)
 library(data.table)
 library(xlsx)
 library(reshape2)
-install.packages("sqldf")
 require(sqldf)
 
 setwd("~/Documents/git/Dreger_2022/raw_data/")
@@ -245,7 +244,7 @@ for (i in 1:(length(ST03))) {
   ST3[[length(ST3)+1]] <- W1
   
   W2 <- summary(M1)$varcomp
-  ST4[[length(ST4)+1]] <- W1
+  ST4[[length(ST4)+1]] <- W2
 
   current.asrt <- as.asrtests(M1, NULL, NULL)
   current.asrt <- rmboundary.asrtests(current.asrt)
