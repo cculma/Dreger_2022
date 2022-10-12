@@ -33,6 +33,10 @@ write.csv(FD1, "~/Documents/git/Dreger_2022/raw_data/FD_raw1.csv", quote = F, ro
 #Start here
 
 FD2 <- read.csv("~/Documents/git/Dreger_2022/raw_data/FD_raw1.csv")
+FD2 <- FD2 %>% distinct(FD, .keep_all = T) 
+FD2 <- FD2[,c(3,4)]
+write.csv(FD2, "~/Documents/git/Dreger_2022/raw_data/FD_raw2.csv", quote = F, row.names = F)
+
 # FD2 <- FD2[,-2]
 FD2 <- inner_join(b1, FD2, by = "ID") %>% select(5,9,10) %>% distinct(gen, .keep_all = T)
 str(FD2)

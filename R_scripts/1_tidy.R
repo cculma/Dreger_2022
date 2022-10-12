@@ -11,8 +11,6 @@ library(xlsx)
 library(reshape2)
 require(sqldf)
 
-install.packages("rJava",type='source')
-
 setwd("~/Documents/git/Dreger_2022/raw_data/")
 load("~/Documents/git/Dreger_2022/tidy_Dreger1.RData")
 save.image("~/Documents/git/Dreger_2022/tidy_Dreger1.RData")
