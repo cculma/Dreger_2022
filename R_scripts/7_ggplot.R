@@ -78,3 +78,29 @@ ggsave(filename = "Lignin.jpg", plot = E, width = 15, height = 6)
 
 
 
+F1 <- ggplot(df1, aes(x=env4, y=predicted.value, group=FD, color=FD)) + 
+  geom_line(alpha = 0.6) +
+  geom_errorbar(aes(ymin = lower.Confidence.limit, ymax = upper.Confidence.limit), width = 0.08, na.rm=TRUE, alpha = 0.6) + 
+  geom_point(size = 1, na.rm=TRUE, alpha = 0.6) +
+  scale_shape_manual(values = c(15, 16, 18)) +
+    theme_classic(base_family = "Arial", base_size = 14) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 0.95, vjust = 0.2)) +
+  facet_grid(. ~ loc, scales = "free_x", space = "free") + labs(y = "predicted.value.Lignin", x = "Harvest")
+
+  setwd("~/Documents/git/Dreger_2022/figs/")
+  ggsave(filename = "Lignin2.jpg", plot = F1, width = 15, height = 4)
+  
+names(ST1) 
+df1 <- as.data.frame(ST1[[5]][[11]][[1]])
+head(df1)  
+
+G <- ggplot(df1, aes(x=env4, y=predicted.value, group=FD, color=FD)) + 
+  geom_line(alpha = 0.6) +
+  geom_errorbar(aes(ymin = lower.Confidence.limit, ymax = upper.Confidence.limit), width = 0.08, na.rm=TRUE, alpha = 0.6) + 
+  geom_point(size = 1, na.rm=TRUE, alpha = 0.6) +
+  scale_shape_manual(values = c(15, 16, 18)) +
+  theme_classic(base_family = "Arial", base_size = 14) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 0.95, vjust = 0.2)) +
+  facet_grid(. ~ loc, scales = "free_x", space = "free") + labs(y = "predicted.value.Cprot", x = "Harvest")
+
+ggsave(filename = "Cprot.jpg", plot = G, width = 15, height = 4)

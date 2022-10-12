@@ -11,6 +11,8 @@ library(xlsx)
 library(reshape2)
 require(sqldf)
 
+install.packages("rJava",type='source')
+
 setwd("~/Documents/git/Dreger_2022/raw_data/")
 load("~/Documents/git/Dreger_2022/tidy_Dreger1.RData")
 save.image("~/Documents/git/Dreger_2022/tidy_Dreger1.RData")
@@ -328,6 +330,42 @@ for (i in 1:length(ST1)) {
 setwd("~/Documents/git/Dreger_2022/statistical_results/wald/")
 
 lapply(names(ST3), function(x) write.xlsx(ST3[[x]], 'dreger.wald.1.xlsx', sheetName=x, append=T, row.names=T, showNA = F))
+
+names(ST3)
+class(ST3[1])
+df2 <- list()
+for (i in 1:length(ST3)) {
+  df1 <- as.data.frame(ST3[i])
+  colnames(df1) <- c("Df","Sum.of.Sq","Wald.statistic","Pr.Chisq.")
+  df1 <- df1 %>% rownames_to_column("term")
+  df2[[length(df2)+1]] <- df1
+}
+names(df2) <- names(ST3)
+
+df2 <-rbindlist(df2, use.names=TRUE, fill=TRUE, idcol="trait")
+write.csv(df2, "~/Documents/git/Dreger_2022/statistical_results/wald/wald1.csv", quote = F, row.names = F)
+
+
+#########
+
+
+df2 <- list()
+for (i in 1:length(ST3)) {
+  df1 <- as.data.frame(ST4[i])
+  df1 <- df1[,c(1:3)]
+  colnames(df1) <- c("Component.Var","std.error","z.ratio")
+  df1 <- df1 %>% rownames_to_column("Trial")
+  df1 <- df1[-9,]
+  df1 <- df1[c(2,4,7,3,5,6,1,8),]
+  df1$Trial <- gsub("loc:env4:gen!loc_","", df1$Trial)
+  df1$Trial <- gsub("loc:env4:gen!env4!","cut:", df1$Trial)
+  df2[[length(df2)+1]] <- df1
+}
+
+names(df2) <- names(ST3)
+
+df2 <-rbindlist(df2, use.names=TRUE, fill=TRUE, idcol="trait")
+write.csv(df2, "~/Documents/git/Dreger_2022/statistical_results/wald/wald2.csv", quote = F, row.names = F)
 
 ##########
 # all traits
