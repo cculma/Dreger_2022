@@ -1,0 +1,16 @@
+FD,cut1_ID,cut2_ID,cut3_ID,cut4_ID,cut1_OR,cut2_OR,cut3_OR,cut4_OR,cut1_WA,cut2_WA,cut3_WA,cut4_WA,cut5_WA
+1 - 2,ns,**,ns,***,*,ns,ns,ns,ns,**,ns,**,ns
+1 - 3,ns,**,ns,**,ns,ns,ns,ns,ns,**,ns,**,ns
+1 - 4,ns,*,ns,***,ns,ns,ns,ns,ns,ns,ns,*,ns
+1 - 5,ns,**,ns,*,*,ns,ns,ns,ns,**,ns,**,*
+1 - 6,ns,**,ns,ns,ns,ns,*,ns,ns,ns,ns,ns,ns
+2 - 3,*,ns,*,ns,*,ns,ns,ns,**,ns,ns,ns,ns
+2 - 4,ns,ns,ns,ns,ns,ns,ns,ns,ns,**,*,ns,ns
+2 - 5,ns,ns,ns,ns,ns,ns,ns,ns,ns,ns,ns,ns,ns
+2 - 6,ns,ns,ns,ns,ns,*,*,ns,ns,ns,ns,ns,ns
+3 - 4,ns,ns,ns,ns,ns,ns,ns,ns,ns,**,ns,ns,ns
+3 - 5,ns,ns,ns,ns,ns,ns,ns,ns,ns,ns,ns,ns,ns
+3 - 6,ns,ns,ns,ns,ns,ns,*,ns,*,ns,ns,ns,ns
+4 - 5,ns,ns,ns,ns,ns,ns,ns,ns,ns,***,**,ns,ns
+4 - 6,ns,ns,ns,*,ns,ns,*,ns,ns,ns,ns,ns,ns
+5 - 6,ns,ns,ns,ns,ns,ns,ns,ns,ns,*,ns,ns,ns

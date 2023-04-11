@@ -1,4 +1,4 @@
-Cutting,ID,block,position,gen,Name,loc,year,DM,Cprot,ADF,aNDF,Ash,Fat,Lignin,Ca,P,Mg,K,Starch,Su_ESC,Su_WSC,TTNDFD
+cut,ID,block,position,gen,Name,loc,year,DM,Cprot,ADF,aNDF,Ash,Fat,Lignin,Ca,P,Mg,K,Starch,Su_ESC,Su_WSC,TTNDFD
 1,10101,1,1,123,467915,WA,2018,94.99,22.34,31.87,37.96,10.47,1.78,6.67,1.38,0.3,0.38,2.06,1.52,6.23,6.88,40.45
 1,10102,1,2,29,499660,WA,2018,95.04,20.5,31.45,38.62,9.07,2.03,6.5,1.27,0.27,0.32,2.07,2.38,7.11,7.83,39.36
 1,10103,1,3,162,AFX457,WA,2018,95.02,19.1,32.97,40.95,8.51,1.96,6.71,1.19,0.25,0.3,2.12,2.2,7.43,7.59,37.48
